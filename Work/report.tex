@@ -1,0 +1,47 @@
+\documentclass[11pt,titlepage]{report}
+\usepackage{Preamble}
+
+\begin{document}
+
+\begin{titlepage}
+    \newgeometry{margin=3cm}
+	\centering
+    \includegraphics[width=0.5\linewidth]{images/EPFL.png}\\[0.25cm] 	% University Logo
+    \textsc{\LARGE École Polytechnique Fédérale de Lausanne}\\ \vspace{\fill}
+    \textbf{\textsc{\fontsize{30}{30}\selectfont Super-Resolution Off the Grid}}\\ \vspace{\fill}		
+	\textsc{\LARGE EPFL - Semester Project in Computer Science}\\[0.4cm]
+	\rule{\linewidth}{0.2 mm} \\[0.5 cm]
+	Sébastien Ollquist \\[2cm] \today
+\end{titlepage}
+\restoregeometry
+
+\thispagestyle{numberonly}
+\begin{summary}
+\section*{Abstract}
+Super-Resolution is the tool that allows us to upgrade the quality of images. The goal of this project is to study a recent paper on super-resolution and discuss the main algorithm in order to eventually find an improvement using information theoretical bounds.
+\end{summary}
+
+% \begin{invsummary}
+% Why not add this here ?
+% \end{invsummary}
+
+\begin{fquote}[Albert Einstein]
+    In theory, theory and practice are the same. In practice, they are not.
+\end{fquote}
+
+
+\chapter{Introduction}
+
+\chapter{Mathematical refresher}
+
+\chapter{Results and discussion}
+
+\chapter{Improvement}
+
+\chapter{Conclusion}
+
+\clearpage
+\pagestyle{numberonly}
+\printbibliography
+
+\end{document}
