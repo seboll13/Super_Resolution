@@ -14,12 +14,15 @@
 \section{Computation proofs}
 \subsection{Multivariate case toy example}
 \begin{fact}
-    Let $[D_w]_{j,j}=w_j\in\mathbb{C}^{k\times k}$ and $$V_d=
-    \begin{pmatrix}
-        e^{i\pi\mu_1^{(1)}}&\ldots&e^{i\pi\mu_1^{(k)}}\\
-        \vdots&\ddots&\vdots\\
-        e^{i\pi\mu_d^{(1)}}&\ldots&e^{i\pi\mu_d^{(k)}}
-    \end{pmatrix}\in\mathbb{C}^{d\times k},$$ where $\mu_n^{(i)}$ are i.i.d. $\sim\mathcal{U}([-1,+1])$. Furthermore, let $F_{n_1,n_2,n_3}=f(s)\big|_{s=e_{n_1}+e_{n_2}+e_{n_3}},$ for all $n_1,n_2,n_3\in[d]$. Then, $F$ admits the tensor decomposition $F=V_d\otimes V_d\otimes(V_dD_w)$.
+    Let $[D_w]_{j,j}=w_j\in\mathbb{C}^{k\times k}$ and 
+    \begin{equation}
+        V_d=\begin{pmatrix}
+            e^{i\pi\mu_1^{(1)}}&\ldots&e^{i\pi\mu_1^{(k)}}\\
+            \vdots&\ddots&\vdots\\
+            e^{i\pi\mu_d^{(1)}}&\ldots&e^{i\pi\mu_d^{(k)}}
+        \end{pmatrix}\in\mathbb{C}^{d\times k},
+        \label{eqn:Vd}
+    \end{equation} where $\mu_n^{(i)}$ are i.i.d. $\sim\mathcal{U}([-1,+1])$. Furthermore, let $F_{n_1,n_2,n_3}=f(s)\big|_{s=e_{n_1}+e_{n_2}+e_{n_3}},$ for all $n_1,n_2,n_3\in[d]$. Then, $F$ admits the tensor decomposition $F=V_d\otimes V_d\otimes(V_dD_w)$.
 \end{fact}
 \begin{proof}
     We wish to show that $$f(e_1+e_2+e_3)=\sum_{j=1}^k w_je^{i\pi(\mu_1^{(j)}+\mu_2^{(j)}+\mu_3^{(j)})}.$$ To do so, we first start by computing the matrix product $V_dD_w$. We now have
@@ -36,10 +39,10 @@
             0&0&\ldots&w_k
         \end{pmatrix}\\&=
         \begin{pmatrix}
-            w_1e^{i\pi\mu_1^{(1)}}&w_1e^{i\pi\mu_1^{(2)}}&\ldots&w_1e^{i\pi\mu_1^{(k)}}\\
-            w_1e^{i\pi\mu_2^{(1)}}&w_1e^{i\pi\mu_2^{(2)}}&\ldots&w_1e^{i\pi\mu_2^{(k)}}\\
+            w_1e^{i\pi\mu_1^{(1)}}&w_2e^{i\pi\mu_1^{(2)}}&\ldots&w_ke^{i\pi\mu_1^{(k)}}\\
+            w_1e^{i\pi\mu_2^{(1)}}&w_2e^{i\pi\mu_2^{(2)}}&\ldots&w_ke^{i\pi\mu_2^{(k)}}\\
             \vdots&\vdots&\ddots&\vdots\\
-            w_1e^{i\pi\mu_d^{(1)}}&w_1e^{i\pi\mu_d^{(2)}}&\ldots&w_1e^{i\pi\mu_d^{(k)}}
+            w_1e^{i\pi\mu_d^{(1)}}&w_2e^{i\pi\mu_d^{(2)}}&\ldots&w_ke^{i\pi\mu_d^{(k)}}
         \end{pmatrix},
     \end{flalign*} so that 
     \begin{flalign*}
@@ -49,6 +52,34 @@
     \end{flalign*} as required.
 \end{proof}
 \newpage
-
 \subsection{Tensor decomposition in the exact recovery case}
+\begin{fact}
+    Let $\tilde{F}_{n_1,n_2,n_3}=\tilde{f}(s)\big|_{s=s^{(n_1)}+s^{(n_2)}+v^{(n_3)}}$, for all $n_1,n_2\in[m']$ and $n_3\in\{1,2\}$ where $m'=m+d+1$. Furthermore, we have 
+    \begin{equation}
+        V_{S'}=
+        \begin{pmatrix}
+            V_S&V_d&1,\ldots,1
+        \end{pmatrix}^T\in\mathbb{C}^{m'\times k},
+    \end{equation}
+    where 
+    \begin{equation}
+        V_S=\begin{pmatrix}
+            e^{i\pi\langle\mu^{(1)},s^{(1)}\rangle}&\ldots&e^{i\pi\langle\mu^{(k)},s^{(1)}\rangle}\\
+            \vdots&\ddots&\vdots\\
+            e^{i\pi\langle\mu^{(1)},s^{(m)}\rangle}&\ldots&e^{i\pi\langle\mu^{(k)},s^{(m)}\rangle}
+        \end{pmatrix}\in\mathbb{C}^{m\times k},
+    \end{equation}
+    and $V_d$ is defined as in (\ref{eqn:Vd}), that is, $[V_d]_{r,c}=e^{i\pi\mu_r^{(c)}}\in\mathbb{C}^{d\times k}$ for $r\in[d]$ and $c\in[k]$. Finally, we have 
+    \begin{equation}
+        V_2=\begin{pmatrix}
+            e^{i\pi\langle\mu^{(1)},v^{(1)}\rangle}&\ldots&e^{i\pi\langle\mu^{(k)},v^{(1)}\rangle}\\
+            e^{i\pi\langle\mu^{(1)},v^{(2)}\rangle}&\ldots&e^{i\pi\langle\mu^{(k)},v^{(2)}\rangle}\\
+            1&\ldots&1
+        \end{pmatrix}\in\mathbb{C}^{3\times k}.
+    \end{equation}
+    Then, in the exact recovery case where $\epsilon_z=0$, $\tilde{F}$ admits the tensor decomposition $$\tilde{F}=V_{S'}\otimes V_{S'}\otimes(V_2D_w).$$
+\end{fact}
+\begin{proof}
+    Yet to come.
+\end{proof}
 \end{document}
