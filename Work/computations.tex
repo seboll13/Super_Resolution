@@ -1,0 +1,54 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{fullpage}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{fact}[theorem]{Fact}
+\newenvironment{proof}{{\bf Proof\quad}}{\hfill\rule{2mm}{2mm}}
+
+\begin{document}
+\section{Computation proofs}
+\subsection{Multivariate case toy example}
+\begin{fact}
+    Let $[D_w]_{j,j}=w_j\in\mathbb{C}^{k\times k}$ and $$V_d=
+    \begin{pmatrix}
+        e^{i\pi\mu_1^{(1)}}&\ldots&e^{i\pi\mu_1^{(k)}}\\
+        \vdots&\ddots&\vdots\\
+        e^{i\pi\mu_d^{(1)}}&\ldots&e^{i\pi\mu_d^{(k)}}
+    \end{pmatrix}\in\mathbb{C}^{d\times k},$$ where $\mu_n^{(i)}$ are i.i.d. $\sim\mathcal{U}([-1,+1])$. Furthermore, let $F_{n_1,n_2,n_3}=f(s)\big|_{s=e_{n_1}+e_{n_2}+e_{n_3}},$ for all $n_1,n_2,n_3\in[d]$. Then, $F$ admits the tensor decomposition $F=V_d\otimes V_d\otimes(V_dD_w)$.
+\end{fact}
+\begin{proof}
+    We wish to show that $$f(e_1+e_2+e_3)=\sum_{j=1}^k w_je^{i\pi(\mu_1^{(j)}+\mu_2^{(j)}+\mu_3^{(j)})}.$$ To do so, we first start by computing the matrix product $V_dD_w$. We now have
+    \begin{flalign*}
+        V_dD_w&=\begin{pmatrix}
+            e^{i\pi\mu_1^{(1)}}&\ldots&e^{i\pi\mu_1^{(k)}}\\
+            \vdots&\ddots&\vdots\\
+            e^{i\pi\mu_d^{(1)}}&\ldots&e^{i\pi\mu_d^{(k)}}
+        \end{pmatrix}
+        \begin{pmatrix}
+            w_1&0&\ldots&0\\
+            0&w_2&\ldots&0\\
+            \vdots&\vdots&\ddots&\vdots\\
+            0&0&\ldots&w_k
+        \end{pmatrix}\\&=
+        \begin{pmatrix}
+            w_1e^{i\pi\mu_1^{(1)}}&w_1e^{i\pi\mu_1^{(2)}}&\ldots&w_1e^{i\pi\mu_1^{(k)}}\\
+            w_1e^{i\pi\mu_2^{(1)}}&w_1e^{i\pi\mu_2^{(2)}}&\ldots&w_1e^{i\pi\mu_2^{(k)}}\\
+            \vdots&\vdots&\ddots&\vdots\\
+            w_1e^{i\pi\mu_d^{(1)}}&w_1e^{i\pi\mu_d^{(2)}}&\ldots&w_1e^{i\pi\mu_d^{(k)}}
+        \end{pmatrix},
+    \end{flalign*} so that 
+    \begin{flalign*}
+        F_{n_1,n_2,n_3}&=\sum_{j=1}^k[V_d]_{n_1,j}[V_d]_{n_2,j}[V_dD_w]_{n_3,j}\\
+        &=\sum_{j=1}^k e^{i\pi\mu_{n_1}^{(j)}}e^{i\pi\mu_{n_2}^{(j)}}w_je^{i\pi\mu_{n_3}^{(j)}}\\
+        &=\sum_{j=1}^k w_je^{i\pi(\mu_{n_1}^{(j)}+\mu_{n_2}^{(j)}+\mu_{n_3}^{(j)})}=f(e_1,e_2,e_3),
+    \end{flalign*} as required.
+\end{proof}
+\newpage
+
+\subsection{Tensor decomposition in the exact recovery case}
+\end{document}
