@@ -1,6 +1,13 @@
 \documentclass[11pt,titlepage]{report}
 \usepackage{Preamble}
 
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{fact}[theorem]{Fact}
+\newenvironment{proof}{{\bf Proof\quad}}{\hfill\rule{2mm}{2mm}}
 \DeclareMathOperator*{\cond}{cond_2}
 
 \begin{document}
@@ -27,45 +34,10 @@ Super-Resolution is the tool that allows us to upgrade the quality of images. Th
     In theory, theory and practice are the same. In practice, they are not.
 \end{fquote}
 
+\include{chap1_introduction.tex}
+\include{chap2_math-refresher.tex}
+\include{chap3_initial-work.tex}
 
-\chapter{Introduction}
-With the increasing amount of data nowadays, it has become extremely important to develop tools that allow us to treat it better. In the case of images, unfortunately a lot of them are still taken with old technology leading to a weak resolution. Recently, a new theory called super-resolution has emerged. Its aim is to reconstruct an image of better quality from a poor quality image.\par 
-
-The paper we will study here is called "Super-Resolution Off the Grid" and has been published by Qingqing Huang and Sham M. Kakade in September 2015. From a theoretical point of view, super-resolution is the problem of recovering a superposition of point sources using bandlimited measurements, which may be corrupted with noise.\par 
-
-The goal of this project is to get familiar with the theory of super-resolution along with all important mathematical preliminaries and study the main result presented in the above mentioned paper. The idea is then to compare this work with other related ones and discuss the efficiency of the main algorithm. Ultimately, it would be a nice addition to start working on an improvement of the main algorithm in order to reduce its complexity and thus make it run faster.
-
-
-\chapter{Mathematical refresher}
-\section{A mathematical theory of super-resolution}
-We consider $k$ point sources in $d$ dimensions, where the points are separated by a distance at least $\Delta$ (in Euclidean distance). The $d$-dimensional signal $x(t)$ can be modeled as a weighted sum of $k$ Dirac measures in $\mathbb{R}^d$ as $$x(t)=\sum_{j=1}^k w_j\delta_{\mu^{(j)}},$$ where the $\mu^{(j)}$'s are the point sources in $\mathbb{R}^d$ and $w_j\in\mathbb{C}$ the weights such that $|w_j|<C$ for every $j\in[k]$ and some absolute constant $C>0$.
-
-\section{Main tools}
-The main mathematical tools that are needed to understand the paper essentially lie around the subject of linear algebra. They include operations related to vectors, matrices and tensors. We also require some probabilistic analysis tools since the algorithm is partly random. In this chapter, we introduce those tools, prove the more important results and closely relate them to the paper. 
-\subsection{Linear algebra}
-\paragraph{Matrix condition number}
-Suppose we have a matrix $X\in\mathbb{R}^{m\times n}$. We let $\lambda_1,\ldots,\lambda_n$ be the eigenvalues of $X^TX$ (with repetitions) and arrange them so that $\lambda_1\geq\ldots\geq\lambda_n\geq 0$. Then, the $\sigma_1\geq\ldots\geq\sigma_n\geq 0$ such that $\sigma_i=\sqrt{\lambda_i}$ are called the \textit{singular values} of $X$. Define $\sigma_{max}(X)=\sigma_1$ and $\sigma_{min}(X)=\sigma_n$. We then define the condition number of a matrix to be the ratio between the largest and the smallest singular value of $X$. That is 
-\begin{equation}
-    \cond(X)=\sigma_1/\sigma_n=\frac{\sigma_{max}(X)}{\sigma_{min}(X)}.
-\end{equation}
-The above factor governs the noise tolerance of the generalised eigenvalue problem, i.e. it is the measure of sensitiveness of a matrix to arbitrary perturbations. Taking its limiting value will allow us to state whether or not the main algorithm achieves stable recovery of the point sources.
-\subsection{Probability}
-\paragraph{Matrix-Hoeffding lemma}...
-
-\section{Tensor decomposition}
-\subsection{Gentle introduction}
-A tensor is a generalisation of a matrix to more than two dimensions. We can think of a tensor as a point in $\mathbb{C}^{m_1\times\ldots\times m_k}$ where $k$ is the order of the tensor. Most of the time here, $k=3$ since three dimensions suffice for our analysis. Note that if $T$ is an order three tensor of dimensions $m_A\times m_B\times m_C$, we can view it as a collection of $m_C$ matrices of size $m_A\times m_B$ stacked on top of each other.\par
-We define the \textit{rank} of a tensor $V$ as the minimum $r$ such that we can write $V$ as the sum of rank one tensors. A rank one tensor will be decomposed in the form of a tensor product of three matrices $A$, $B$ and $C$ as $V=A\otimes B\otimes C$. The above product is element-wise defined as $V_{i_1,i_2,i_3}=\sum_{j=1}^k A_{i_1,j}B_{i_2,j}C_{i_3,j}$.\par 
-An alternative definition is given using the notion of a multi-linear mapping. Namely, for given dimensions $m_A$, $m_B$, $m_C$, the mapping $V(\cdot,\cdot,\cdot):\mathbb{C}^{m\times m_A}\times\mathbb{C}^{m\times m_B}\times\mathbb{C}^{m\times m_C}\to\mathbb{C}^{m_A\times m_B\times m_C}$ is defined as: $$\left[V(X_A,X_B,X_C)\right]_{i_1,i_2,i_3}=\sum_{j_1,j_2,j_3\in[m]}V_{j_1,j_2,j_3}[X_A]_{j_1,i_1}[X_B]_{j_2,i_2}[X_C]_{j_3,i_3}.$$
-We can verify that for a particular vector $a\in\mathbb{C}^m$, the projection $V(I,I,a)$ of $V$ along the 3rd dimension is $V(I,I,a)=ADiag(C^T a)B^T$ as long as $V$ admits a tensor decomposition $V=A\otimes B\otimes C$.
-\subsection{Jennrich's algorithm}
-
-\chapter{Initial work}
-\section{Prony's method}
-In this section, we will consider 
-\section{Univariate case: adaptation of Prony's method}
-We follow the definitions given in the paper.
-\section{Multivariate toy case}
 
 \chapter{Main algorithm}
 
