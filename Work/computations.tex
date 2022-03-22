@@ -9,9 +9,14 @@
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{fact}[theorem]{Fact}
 \newenvironment{proof}{{\bf Proof\quad}}{\hfill\rule{2mm}{2mm}}
+\DeclareMathOperator*{\cond}{cond_2}
 
 \begin{document}
 \section{Computation proofs}
+\subsection{Univariate Matrix-Pencil method}
+\begin{fact}
+    Define the Vandermonde matrix $V_m\in\mathbb{C}^{m\times k}$ as $[V_m]_{r,c}=\big(e^{i\pi\mu^{(c)}}\big)^r$ for every $0\leq r\leq m-1$ and $c\in[k]$. Since all the elements of $V_m$ lie on the unit circle in the complex plane, then $$\lim_{m\to\infty}\cond(V_m)=1.$$
+\end{fact}
 \subsection{Multivariate case toy example}
 \begin{fact}
     Let $[D_w]_{j,j}=w_j\in\mathbb{C}^{k\times k}$ and 
@@ -48,7 +53,7 @@
     \begin{flalign*}
         F_{n_1,n_2,n_3}&=\sum_{j=1}^k[V_d]_{n_1,j}[V_d]_{n_2,j}[V_dD_w]_{n_3,j}\\
         &=\sum_{j=1}^k e^{i\pi\mu_{n_1}^{(j)}}e^{i\pi\mu_{n_2}^{(j)}}w_je^{i\pi\mu_{n_3}^{(j)}}\\
-        &=\sum_{j=1}^k w_je^{i\pi(\mu_{n_1}^{(j)}+\mu_{n_2}^{(j)}+\mu_{n_3}^{(j)})}=f(e_1,e_2,e_3),
+        &=\sum_{j=1}^k w_je^{i\pi(\mu_{n_1}^{(j)}+\mu_{n_2}^{(j)}+\mu_{n_3}^{(j)})}=f(e_1+e_2+e_3),
     \end{flalign*} as required.
 \end{proof}
 \newpage
@@ -58,7 +63,7 @@
     \begin{equation}
         V_{S'}=
         \begin{pmatrix}
-            V_S&V_d&1,\ldots,1
+            V_S,&V_d,&[1]^k
         \end{pmatrix}^T\in\mathbb{C}^{m'\times k},
     \end{equation}
     where 
