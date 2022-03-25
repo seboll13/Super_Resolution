@@ -1,0 +1,51 @@
+\chapter{Construction of Hankel matrices}
+In this section, we prove that the Hankel matrices $H_0$ and $H_1$ defined earlier admit the respective diagonalisations $V_mD_wV_m^T$ and $V_mD_wD_\mu V_m^T$. To do so, we first compute the product $D_wV_m^T$. We have 
+\begin{flalign*}
+    D_wV_m^T&=
+    \begin{pmatrix}
+        w_1&0&\ldots&0\\
+        0&w_2&\ldots&0\\
+        \vdots&\vdots&\ddots&\vdots\\
+        0&0&\ldots&w_k
+    \end{pmatrix}
+    \begin{pmatrix}
+        1&e^{i\pi\mu^{(1)}}&\ldots&\big(e^{i\pi\mu^{(1)}}\big)^{m-1}\\
+        1&e^{i\pi\mu^{(2)}}&\ldots&\big(e^{i\pi\mu^{(2)}}\big)^{m-1}\\
+        \vdots&\vdots&\ddots&\vdots\\
+        1&e^{i\pi\mu^{(k)}}&\ldots&\big(e^{i\pi\mu^{(k)}}\big)^{m-1}
+    \end{pmatrix}\\
+    &=\begin{pmatrix}
+        w_1&w_1e^{i\pi\mu^{(1)}}&\ldots&w_1\big(e^{i\pi\mu^{(1)}}\big)^{m-1}\\
+        w_2&w_2e^{i\pi\mu^{(2)}}&\ldots&w_2\big(e^{i\pi\mu^{(2)}}\big)^{m-1}\\
+        \vdots&\vdots&\ddots&\vdots\\
+        w_k&w_ke^{i\pi\mu^{(k)}}&\ldots&w_k\big(e^{i\pi\mu^{(k)}}\big)^{m-1}
+    \end{pmatrix},
+\end{flalign*} so that
+\begin{flalign*}
+    H_0=V_mD_wV_m^T&=
+    \begin{pmatrix}
+        1&\ldots&1\\
+        e^{i\pi\mu^{(1)}}&\ldots&e^{i\pi\mu^{(k)}}\\
+        \vdots&\cdots&\vdots\\
+        \big(e^{i\pi\mu^{(1)}}\big)^{m-1}&\ldots&\big(e^{i\pi\mu^{(k)}}\big)^{m-1}
+    \end{pmatrix}
+    \begin{pmatrix}
+        w_1&w_1e^{i\pi\mu^{(1)}}&\ldots&w_1\big(e^{i\pi\mu^{(1)}}\big)^{m-1}\\
+        w_2&w_2e^{i\pi\mu^{(2)}}&\ldots&w_2\big(e^{i\pi\mu^{(2)}}\big)^{m-1}\\
+        \vdots&\vdots&\ddots&\vdots\\
+        w_k&w_ke^{i\pi\mu^{(k)}}&\ldots&w_k\big(e^{i\pi\mu^{(k)}}\big)^{m-1}
+    \end{pmatrix}\\
+    &=\begin{pmatrix}
+        \sum_{j\in[k]}w_j&\sum_{j\in[k]}w_je^{i\pi\mu^{(1)}}&\ldots&\sum_{j\in[k]}w_j\big(e^{i\pi\mu^{(1)}}\big)^{m-1}\\
+        \sum_{j\in[k]}w_je^{i\pi\mu^{(1)}}&\sum_{j\in[k]}w_j\big(e^{i\pi\mu^{(1)}}\big)^2&\ldots&\sum_{j\in[k]}w_j\big(e^{i\pi\mu^{(1)}}\big)^m\\
+        \vdots&\vdots&\ddots&\vdots\\
+        \sum_{j\in[k]}w_j\big(e^{i\pi\mu^{(1)}}\big)^{m-1}&\sum_{j\in[k]}w_j\big(e^{i\pi\mu^{(1)}}\big)^m&\ldots&\sum_{j\in[k]}w_j\big(e^{i\pi\mu^{(1)}}\big)^{2m-1}\\
+    \end{pmatrix}\\
+    &=\begin{pmatrix}
+        f(0)&f(1)&\ldots&f(m-1)\\
+        f(1)&f(2)&\ldots&f(m)\\
+        \vdots&\vdots&\ddots&\vdots\\
+        f(m-1)&f(m)&\ldots&f(2m-1)
+    \end{pmatrix},
+\end{flalign*} 
+where $f(s)=\sum_{j\in[k]}w_j\big(e^{i\pi\mu^{(j)}}\big)^s$ for $s=0,\ldots,2m-1$ which indeed corresponds to the defined Hankel matrix. The proof is similar for $H_1$ except that $s$ varies from 1 to $2m$ since element-wise multiplication of $H_0$ with the diagonal matrix $D_\mu$ yields a simple scaling by a factor $e^{i\pi\mu^{(j)}}$.
