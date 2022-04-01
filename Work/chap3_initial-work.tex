@@ -19,8 +19,8 @@ The initial setting is as follows. We construct two $m\times m$ complex valued H
         F_{i_1,i_2,i_3}&=\sum_{n=1}^k[V_m]_{i_1,n}[V_m]_{i_2,n}[V_2D_w]_{i_3,n}\\
         &=\sum_{n=1}^k\big(e^{i\pi\mu^{(n)}}\big)^{i_1-1}\big(e^{i\pi\mu^{(n)}}\big)^{i_2-1}w_n\big(e^{i\pi\mu^{(n)}}\big)^{i_3-1}\\
         &=\sum_{n=1}^k w_n\big(e^{i\pi\mu^{(n)}}\big)^{i_1+i_2+i_3-3},
-    \end{flalign*} for $i_1,i_2\in[m]$ and $i_3\in[2]$. It can be verified that the measurements that form both Hankel matrices are given by $$f(s)=\sum_{j\in[k]}w_j\big(e^{i\pi\mu^{(j)}}\big)^s,$$ with $s=0,\ldots,2m-1$ for $H_0$ and $s=1,\ldots,2m$ for $H_1$. For the details of the proof, see Appendix A. Then, since $F_{i_1,i_2,i_3}=[H_{i_3-1}]_{i_1,i_2}$ by definition of $F$ for $i_1,i_2\in[m]$ and $i_3\in[2]$, we directly get that 
-    $$F_{i_1,i_2,i_3}=\sum_{n=1}^k w_n\big(e^{i\pi\mu^{(n)}}\big)^{i_1+i_2+i_3-3},$$ as required.
+    \end{flalign*} for $i_1,i_2\in[m]$ and $i_3\in[2]$. It can be verified that the measurements that form both Hankel matrices are given by $$f(s)=\sum_{j\in[k]}w_j\big(e^{i\pi\mu^{(j)}}\big)^s,$$ with $s=0,\ldots,2m-1$ for $H_0$ and $s=1,\ldots,2m$ for $H_1$. For the details of the proof, see Appendix A. Then, since $F_{i_1,i_2,i_3}=[H_{i_3-1}]_{i_1,i_2}$, for a fixed $i_3$ we have either $F_{i_1,i_2,1}=[H_0]_{i_1,i_2}$ or $F_{i_1,i_2,2}=[H_1]_{i_1,i_2}$. Note that since we are dealing with Hankel matrices, $[H_0]_{i_1,i_2}=f(i_1)+f(i_2)-2=f(i_1+i_2-2)$. Hence,
+    $$F_{i_1,i_2,i_3}=\sum_{n\in[k]}w_n\big(e^{i\pi\mu^{(n)}}\big)^{i_1+i_2+i_3-3},$$ as required.
 \end{proof}
 \section{Multivariate toy case}
 We follow the definitions given in the paper. We have $D_w=Diag(w_j)\in\mathbb{C}^{k\times k}$ and $[V_d]_{r,c}=e^{i\pi\mu_r^{(c)}}\in\mathbb{C}^{d\times k}$ the latter in which $\mu_n^{(i)}$ are i.i.d. $\sim Unif([-1,+1])$. Furthermore, we have $F_{n_1,n_2,n_3}=f(s)\big|_{s=e_{n_1}+e_{n_2}+e_{n_3}},$ for all $n_1,n_2,n_3\in[d]$. We have the following fact:

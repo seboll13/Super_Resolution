@@ -19,12 +19,12 @@ We define the \textit{rank} of a tensor $V$ as the minimum $r$ such that we can 
 An alternative definition is given using the notion of a multi-linear mapping. Namely, for given dimensions $m_A$, $m_B$, $m_C$, the mapping $V(\cdot,\cdot,\cdot):\mathbb{C}^{m\times m_A}\times\mathbb{C}^{m\times m_B}\times\mathbb{C}^{m\times m_C}\to\mathbb{C}^{m_A\times m_B\times m_C}$ is defined as: $$\left[V(X_A,X_B,X_C)\right]_{i_1,i_2,i_3}=\sum_{j_1,j_2,j_3\in[m]}V_{j_1,j_2,j_3}[X_A]_{j_1,i_1}[X_B]_{j_2,i_2}[X_C]_{j_3,i_3}.$$
 We can verify that for a particular vector $a\in\mathbb{C}^m$, the projection $V(I,I,a)$ of $V$ along the 3rd dimension is $V(I,I,a)=ADiag(C^T a)B^T$ as long as $V$ admits a tensor decomposition $V=A\otimes B\otimes C$. Indeed,
 \begin{flalign*}
-    \left[V(I,I,a)\right]_{i_1,i_2,i_3}&=\sum_{j_1,j_2,j_3\in[m]}V_{j_1,j_2,j_3}[I]_{j_1,i_1}[I]_{j_2,i_2}[a]_{j_3,i_3}\\
-    &=\sum_{j_1,j_2,j_3\in[m]}\sum_{n\in[k]} A_{j_1,n}B_{j_2,n}C_{j_3,n}[I]_{j_1,i_1}[I]_{j_2,i_2}[a]_{j_3,i_3}\\
-    &=...\\
-    &=Diag(C^T a)(A\otimes B)\\
-    &=ADiag(C^T a)B^T
-\end{flalign*}
+    \left[V(I,I,a)\right]_{i_1,i_2}&=\sum_{j_1,j_2,j_3\in[m]}V_{j_1,j_2,j_3}[I]_{j_1,i_1}[I]_{j_2,i_2}[a]_{j_3}\\
+    &=\sum_{j_1,j_2,j_3\in[m]}\sum_{n\in[k]} A_{j_1,n}B_{j_2,n}C_{j_3,n}[I]_{j_1,i_1}[I]_{j_2,i_2}[a]_{j_3}\\
+    &=\sum_{j_3\in[m]}\sum_{n\in[k]} A_{i_1,n}B_{i_2,n}C_{j_3,n}[a]_{j_3}\\
+    &=\sum_{n\in[k]}A_{i_1,n}B_{i_2,n}\sum_{j_3\in[m]}C_{j_3,n}[a]_{j_3}\\
+    &=\left[ADiag(C^T a)B^T\right]_{i_1,i_2}.
+\end{flalign*} Since the above is true for every $i_1,i_2$, we get the desired equality.
 \subsection{Jennrich's algorithm}
 As previously stated, the goal of tensor decomposition is to, given a tensor $T$ of rank $k$, decompose it as a sum of rank 1 tensors of appropriate dimensions. Jennrich's algorithm is commonly used for tensor decomposition. We denote the following theorem:
 \begin{theorem}
