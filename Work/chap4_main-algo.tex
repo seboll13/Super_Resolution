@@ -32,6 +32,13 @@ Let us first recall what variables are used in the main algorithm.
         w_1e^{i\pi\langle\mu^{(1)},v^{(2)}\rangle}&\ldots&w_ke^{i\pi\langle\mu^{(k)},v^{(2)}\rangle}\\
         w_1&\ldots&w_k
     \end{pmatrix}.$$
-    For simplicity of notation, define $v^{(3)}=0$ so that $e^{i\pi\langle\mu^{(j)},v^{(3)}\rangle}=1$ for every $j\in[k]$. Using this, we can express the $r$'th line and $c$'th column in $V_2D_w$ as $$[V_2D_w]_{r,c}=w_ce^{i\pi\langle\mu^{(c)},v^{(r)}\rangle},$$ for every $r\in[3]$ and $c\in[k]$. What we want to show is $$F_{n_1,n_2,n_3}=\sum_{n\in[k]}[V_{S'}]_{n_1,n}[V_{S'}]_{n_2,n}[V_2D_w]_{n_3,n},$$ where $F_{n_1,n_2,n_3}=\tilde{f}(s)\big|_{s=s^{(n_1)}+s^{(n_2)}+v^{(n_3)}}$ are the noisy measurements.
+    Notice that we can think of multiplying the last row of $w$'s with an exponential whose exponent is 0. Then, write $[V_d]_{r,c}=e^{i\pi\mu_r^{(c)}}=e^{i\pi\langle\mu^{(c)},e_r=s(m+r)\rangle}$. Using this, we can express the $r$'th row and the $c$'th column of $V_{S'}$ as $$[V_{S'}]_{r,c}=e^{i\pi\langle\mu^{(c)},s^{(r)}\rangle},\quad r\in[m'],c\in[k].$$ From there for $n_1,n_2\in[m']$ and $n_3=1,2$, it follows easily that 
+    \begin{flalign*}
+        F_{n_1,n_2,n_3}&=\sum_{n\in[k]}[V_{S'}]_{n_1,n}[V_{S'}]_{n_2,n}[V_2D_w]_{n_3,n}\\
+        &=\sum_{n\in[k]}e^{i\pi\langle\mu^{(n)}, s^{(n_1)}\rangle}e^{i\pi\langle\mu^{(n)},s^{(n_2)}\rangle}w_ne^{i\pi\langle\mu^{(n)},v^{(n_3)}\rangle}\\
+        &=\sum_{n\in[k]}w_ne^{i\pi\left(\langle\mu^{(n)},s^{(n_1)}\rangle+\langle\mu^{(n)},s^{(n_2)}\rangle+\langle\mu^{(n)},v^{(n_3)}\rangle\right)}\\
+        &=\sum_{n\in[k]}w_ne^{i\pi\langle\mu^{(n)},s^{(n_1)}+s^{(n_2)}+v^{(n_3)}\rangle}\\
+        &=\tilde{f}(s)\big|_{s=s^{(n_1)}+s^{(n_2)}+v^{(n_3)}},
+    \end{flalign*} as required.
 \end{proof}
 \subsection{Exact case recovery}
