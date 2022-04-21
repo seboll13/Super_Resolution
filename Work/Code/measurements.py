@@ -1,3 +1,17 @@
+# ############################################################################
+#
+# File       : measurements.py
+# Description: Better visualisation of samples generation for the main algorithm
+# Author     : Sébastien Ollquist
+# Date       : 2022 Spring Semester
+# School     : EPFL - Lausanne
+# Course     : (CS-498) Semester Project in Computer Science
+# Topic      : Super resolution off the grid
+# References : 
+#  - https://stackoverflow.com/questions/11140163/plotting-a-3d-cube-a-sphere-and-a-vector-in-matplotlib
+#
+# ############################################################################
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -57,10 +71,10 @@ def draw_unit_sphere(point):
 
 if __name__ == '__main__':
     # Gaussian samples
-    gaussian_samples = [generate_gaussian_samples()[0] for _ in range(m)]
+    samples = [generate_gaussian_samples()[0] for _ in range(m)]
     (V1,V2,V3) = generate_sample_from_unit_sphere()
 
     # Plotting part
-    draw_gaussian_samples(gaussian_samples)
+    draw_gaussian_samples(samples)
     draw_unit_sphere((V1,V2,V3))
     plt.show()
