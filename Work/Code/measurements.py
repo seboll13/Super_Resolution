@@ -14,23 +14,39 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from time import time
 
 m = 2000     # number of measurements
 Delta = 0.05 # min distance between any two points on the plane
 R = 1/Delta  # cutoff frequency
 
 
-def generate_gaussian_samples():
-    """Generate samples from a Gaussian distribution from uniformly distributed samples."""
-    U1, U2 = np.random.uniform(0,1), np.random.uniform(0,1)
-    
-    # Apply the Box-Muller transformation (only one sample suffices)
-    Z1 = np.sqrt(-2*np.log(U1)) * np.cos(2*np.pi*U2)
-    Z2 = np.sqrt(-2*np.log(U1)) * np.sin(2*np.pi*U2)
+def timer(func):
+    """Decorator function that calls any subroutine function"""
+    def f(x):
+        start = time()
+        ret = func(x) # Time measurement for f(x)
+        end = time()
+        print('Execution time of %s(): %.5f seconds' % (func.__name__, end - start))
+        return ret
+    return f
 
-    # Scale the variances by the cutoff frequency
-    sigma = R**2
-    return sigma*Z1, sigma*Z2
+
+@timer
+def generate_gaussian_samples(num_samples):
+    """Generate samples from a Gaussian distribution from uniformly distributed samples."""
+    samples = []
+    for _ in range(num_samples):
+        U1, U2 = np.random.uniform(0,1), np.random.uniform(0,1)
+        
+        # Apply the Box-Muller transformation (only one sample suffices)
+        Z1 = np.sqrt(-2*np.log(U1)) * np.cos(2*np.pi*U2)
+        #Z2 = np.sqrt(-2*np.log(U1)) * np.sin(2*np.pi*U2)
+
+        # Scale the variances by the cutoff frequency
+        sigma = R**2
+        samples.append(sigma*Z1)
+    return samples
 
 
 def draw_gaussian_samples(samples):
@@ -40,7 +56,8 @@ def draw_gaussian_samples(samples):
     plt.ylabel('# of samples')
 
 
-def generate_sample_from_unit_sphere():
+@timer
+def generate_sample_from_unit_sphere(x=1):
     """Generate a triplet that lies on the surface of the unit sphere."""
     Z1 = np.random.normal(0,1)
     Z2 = np.random.normal(0,1)
@@ -61,7 +78,7 @@ def draw_unit_sphere(point):
     z = np.cos(v)
 
     fig = plt.figure()
-    ax = fig.gca(projection='3d')
+    ax = fig.add_subplot(projection='3d')
     ax.set_box_aspect((np.ptp(x), np.ptp(y), np.ptp(z)))
     ax.plot_wireframe(x, y, z)
 
@@ -71,8 +88,8 @@ def draw_unit_sphere(point):
 
 if __name__ == '__main__':
     # Gaussian samples
-    samples = [generate_gaussian_samples()[0] for _ in range(m)]
-    (V1,V2,V3) = generate_sample_from_unit_sphere()
+    samples = generate_gaussian_samples(m)
+    (V1,V2,V3) = generate_sample_from_unit_sphere(x=1)
 
     # Plotting part
     draw_gaussian_samples(samples)
