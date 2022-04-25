@@ -23,16 +23,17 @@ R = 1/Delta  # cutoff frequency
 
 def timer(func):
     """Decorator function that calls any subroutine function"""
-    def f(x):
+    def f(*args, **kwargs):
+        """Measure execution time of any function f"""
         start = time()
-        ret = func(x) # Time measurement for f(x)
+        ret = func(*args, **kwargs)
         end = time()
         print('Execution time of %s(): %.5f seconds' % (func.__name__, end - start))
         return ret
     return f
 
 
-@timer
+@timer # Decorator
 def generate_gaussian_samples(num_samples):
     """Generate samples from a Gaussian distribution from uniformly distributed samples."""
     samples = []
@@ -56,7 +57,7 @@ def draw_gaussian_samples(samples):
     plt.ylabel('# of samples')
 
 
-@timer
+@timer # Decorator
 def generate_sample_from_unit_sphere(x=1):
     """Generate a triplet that lies on the surface of the unit sphere."""
     Z1 = np.random.normal(0,1)
@@ -89,7 +90,7 @@ def draw_unit_sphere(point):
 if __name__ == '__main__':
     # Gaussian samples
     samples = generate_gaussian_samples(m)
-    (V1,V2,V3) = generate_sample_from_unit_sphere(x=1)
+    (V1,V2,V3) = generate_sample_from_unit_sphere()
 
     # Plotting part
     draw_gaussian_samples(samples)
