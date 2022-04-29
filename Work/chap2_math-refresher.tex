@@ -1,6 +1,8 @@
 \chapter{Mathematical refresher}
 \section{A mathematical theory of super-resolution}
-We consider $k$ point sources in $d$ dimensions, where the points are separated by a distance at least $\Delta$ (in Euclidean distance). The $d$-dimensional signal $x(t)$ can be modeled as a weighted sum of $k$ Dirac measures in $\mathbb{R}^d$ as $$x(t)=\sum_{j=1}^k w_j\delta_{\mu^{(j)}},$$ where the $\mu^{(j)}$'s are the point sources in $\mathbb{R}^d$ and $w_j\in\mathbb{C}$ the weights such that $|w_j|<C$ for every $j\in[k]$ and some absolute constant $C>0$.
+\paragraph{Mathematical abstraction} We consider $k$ point sources in $d$ dimensions, where the points are separated by a distance at least $\Delta$ (in Euclidean distance). The $d$-dimensional signal $x(t)$ can be modeled as a weighted sum of $k$ Dirac measures in $\mathbb{R}^d$ as $$x(t)=\sum_{j=1}^k w_j\delta_{\mu^{(j)}},$$ where the $\mu^{(j)}$'s are the point sources in $\mathbb{R}^d$ and $w_j\in\mathbb{C}$ the weights such that $|w_j|<C$ for every $j\in[k]$ and some absolute constant $C>0$. $\Delta$ is by definition the minimal possible distance between any two pair of points of the $d$-dimensional plane. Formally, we regard $\Delta$ in terms of Euclidean distance as $$\Delta=\min_{j\neq j'}||\mu^{(j)}-\mu^{(j')}||_2.$$
+\paragraph{Measurement function} There are two main factors that represent our signal: the weights $w_j$ and the complex low pass point spread functions $e^{i\pi\langle s,t\rangle}$ for some measurement $s$. The former is simply a weighting factor that is not too relevant to us here. The latter however represents the response of an imaging system to a point source. That is, it determines the overall performance level of our system and will be of crucial interest to our study.\par 
+We define the measurement function $f(s):\mathbb{R}^d\to\mathbb{C}$ as being the convolution of the point source $x(t)$ with the point spread function $e^{i\pi\langle s,t\rangle}$. Formally, $$f(s)=\sum_{j\in[k]}w_je^{i\pi\langle\mu^{(j)},s\rangle}.$$ The measurements $s$ in the noisy setting are corrupted with a uniformly bounded perturbation $z$ so that the noisy recovery problem becomes $$\tilde{f}(s)=f(s)+z(s),$$ in which $|z(s)|\leq\epsilon_z$ for every $s$ and a constant $\epsilon_z\in(0,1/2)$. The idea is that given access to the signal $x(t)$, we wish to generate a set of random bandlimited Fourier measurements and evaluate the noisy function $\tilde{f}$ on every measurement $s$ in order to recover the parameters $\{w_j,\mu^{(j)}:j\in[k]\}$ of the point source signal as best as we can. The problem statement will be described in more detail in Chapter 4.
 
 \section{Main tools}
 The main mathematical tools that are needed to understand the paper essentially lie around the subject of linear algebra. They include operations related to vectors, matrices and tensors. We also require some probabilistic analysis tools since the algorithm is partly random. In this chapter, we introduce those tools, prove the more important results and closely relate them to the paper. 
@@ -11,20 +13,39 @@ Before introducing the generalised eigenvalue problem, it is important to recall
 \end{equation}
 The above factor governs the noise tolerance of the generalised eigenvalue problem, i.e. it is the measure of sensitiveness of a matrix to arbitrary perturbations. Taking its limiting value will allow us to state whether or not the main algorithm achieves stable recovery of the point sources.\par
 The goal of an eigenvalue problem is to simply find the eigenvalues of a particular matrix $A$. To do so, we generally solve the following equation: $AU=UV\Rightarrow AUU^T=UVU^T\Rightarrow A=UVU^T=UVU^{-1}$, where $\mathbb{R}^{d\times d}\ni U:=(u_1,\ldots,u_d)$ are the eigenvectors and $\mathbb{R}^{d\times d}\ni V:=Diag\left[(\lambda_1,\ldots,\lambda_d)^T\right]$ the eigenvalues. However, in the generalised version of this problem, we add another random matrix $B$ such that the problem becomes $$AU=BUV\Rightarrow AUU^T=BUVU^T\Rightarrow A=BUVU^T=BUVU^{-1},$$ where $U$ again are the eigenvectors and $V$ the eigenvalues. Note that $A$ and $B$ are both symmetric. We form the pair $(A,B)$ called the \textit{pencil} and the pair $(U,V)$ called the \textit{eigenpair}. Therefore, we introduce a first version of what is called the matrix pencil method, in which given a pair of matrices $(A,B)$, we wish to find the generalised eigenvalues $\lambda$ for which there is a vector ${\bf x}$ such that $A{\bf x}=\lambda B{\bf x}$. Note that the eigenvalues of $A$ are the solution to the generalised eigenvalue problem where $B=I$.
+\subsection{Common norms}
+\paragraph{Vectors} Norms are a powerful linear algebra tool that allows us to retreive important information regarding a particular matrix or vector. The most common vector norm is the $L^p$-norm defined for a vector $X$ of size $n$ as 
+\begin{equation}
+    ||X||_p=\left(\sum_{i\in[n]}x_i^p\right)^{1/p}.
+\end{equation}
+Note that $p$ can take any value in $\mathbb{N}^*$ but the most common ones are 1, 2 or $\infty$. In essence, the $L^1$-norm is the sum of absolute values of our vector, the $L^2$-norm represents the Euclidean distance of the vector from the origin and the $L^\infty$ norm is by definition the largest element in the vector, in absolute value.
+\paragraph{Matrices} The same way we define a norm operator for vectors, we can define a similar operator for matrices, that will however have a slightly different meaning. Essentially, a matrix norm is a vector norm in a vector space whose elements are matrices. Let $A$ be a matrix of size $m\times n$. Equivalently, we define the $L^p$-norm of $A$ as 
+\begin{equation}
+    ||A||_p=\left(\sum_{i\in[m]}\sum_{j\in[n]}[A]_{i,j}^p\right)^{1/p}.
+\end{equation}
+The most important matrix norm in our case is an equivalent version of the $L^2$-norm called the \textit{Frobenius} norm. It basically represents the size of the matrix $A$, and we define it as 
+\begin{equation}
+    ||A||_F=\sqrt{\sum_{i\in[m]}\sum_{j\in[n]}[A]_{i,j}^2}.
+\end{equation}
 
 \section{Tensor decomposition}
 \subsection{Gentle introduction}
-A tensor is a generalisation of a matrix to more than two dimensions. We can think of a tensor as a point in $\mathbb{C}^{m_1\times\ldots\times m_k}$ where $k$ is the order of the tensor. Most of the time here, $k=3$ since three dimensions suffice for our analysis. Note that if $T$ is an order three tensor of dimensions $m_A\times m_B\times m_C$, we can view it as a collection of $m_C$ matrices of size $m_A\times m_B$ stacked on top of each other. For example, the entry $A_{i,j,k}$ of a 3-tensor $A$ will simply be the $(i,j)$'th entry of the $k$'th matrix \cite{tensorMethods}.\par
-We define the \textit{rank} of a tensor $V$ as the minimum $r$ such that we can write $V$ as the sum of rank one tensors. A rank one tensor will be decomposed in the form of a tensor product of three matrices $A$, $B$ and $C$ as $V=A\otimes B\otimes C$ \cite{algoToolbox}. The above product is element-wise defined as $V_{i_1,i_2,i_3}=\sum_{j=1}^k A_{i_1,j}B_{i_2,j}C_{i_3,j}$.\par 
+A tensor is a generalisation of a matrix to more than two dimensions. We can think of a tensor as a point in $\mathbb{C}^{m_1\times\ldots\times m_k}$ where $k$ is the order of the tensor. Most of the time here, $k=3$ since three dimensions suffice for our analysis. Note that if $T$ is an order three tensor of dimensions $m\times n\times p$, we can view it as a collection of $p$ matrices of size $m\times n$ stacked on top of each other. For example, the entry $A_{i,j,k}$ of a 3-tensor $A$ will simply be the $(i,j)$'th entry of the $k$'th matrix \cite{tensorMethods}.\par
+We define the \textit{rank} of a tensor $V$ as the minimum $r$ such that we can write $V$ as the sum of rank one tensors. A rank one tensor will be decomposed in the form of a tensor product of three matrices $A$, $B$ and $C$ as $V=A\otimes B\otimes C$, where each matrix has the same size than that defined above \cite{algoToolbox}. The decomposition is element-wise defined as $V_{i_1,i_2,i_3}=\sum_{j=1}^r A_{i_1,j}B_{i_2,j}C_{i_3,j}$, for every $i_1\in[m], i_2\in[n]$ and $i_3\in[p]$.\par 
 An alternative definition is given using the notion of a multi-linear mapping. Namely, for given dimensions $m_A$, $m_B$, $m_C$, the mapping $V(\cdot,\cdot,\cdot):\mathbb{C}^{m\times m_A}\times\mathbb{C}^{m\times m_B}\times\mathbb{C}^{m\times m_C}\to\mathbb{C}^{m_A\times m_B\times m_C}$ is defined as: $$\left[V(X_A,X_B,X_C)\right]_{i_1,i_2,i_3}=\sum_{j_1,j_2,j_3\in[m]}V_{j_1,j_2,j_3}[X_A]_{j_1,i_1}[X_B]_{j_2,i_2}[X_C]_{j_3,i_3}.$$
 We can verify that for a particular vector $a\in\mathbb{C}^m$, the projection $V(I,I,a)$ of $V$ along the 3rd dimension is $V(I,I,a)=ADiag(C^T a)B^T$ as long as $V$ admits a tensor decomposition $V=A\otimes B\otimes C$. Indeed,
 \begin{flalign*}
     \left[V(I,I,a)\right]_{i_1,i_2}&=\sum_{j_1,j_2,j_3\in[m]}V_{j_1,j_2,j_3}[I]_{j_1,i_1}[I]_{j_2,i_2}[a]_{j_3}\\
     &=\sum_{j_1,j_2,j_3\in[m]}\sum_{n\in[k]} A_{j_1,n}B_{j_2,n}C_{j_3,n}[I]_{j_1,i_1}[I]_{j_2,i_2}[a]_{j_3}\\
     &=\sum_{j_3\in[m]}\sum_{n\in[k]} A_{i_1,n}B_{i_2,n}C_{j_3,n}[a]_{j_3}\\
-    &=\sum_{n\in[k]}A_{i_1,n}B_{i_2,n}\sum_{j_3\in[m]}C_{j_3,n}[a]_{j_3}\\
+    &=\underbrace{\sum_{n\in[k]}A_{i_1,n}B_{i_2,n}}_{=AB}\underbrace{\sum_{j_3\in[m]}C_{j_3,n}[a]_{j_3}}_{=Diag(C^T a)}\\
     &=\left[ADiag(C^T a)B^T\right]_{i_1,i_2}.
-\end{flalign*} Since the above is true for every $i_1,i_2$, we get the desired equality.
+\end{flalign*} Since the above is true for every $i_1,i_2$, and we do not consider the $i_3$ coordinate since $a$ is a vector, we get the desired equality.
+\subsection{Tensor Frobenius norm}
+We can also extend the matrix norm definition to that of a tensor. However in our work, we only will need the equivalent Frobenius norm which will be useful in the main algorithm. For the purpose, let $V$ be a rank $k$ 3-tensor of dimensions $m\times n\times 3$. Then, the Frobenius norm of $V$ is simply defined as 
+\begin{equation}
+    ||V||_F=\sqrt{\sum_{i\in[m]}\sum_{j\in[n]}\sum_{l\in[3]}[V]_{i,j,l}^2}.
+\end{equation}
 \subsection{Jennrich's algorithm}
 As previously stated, the goal of tensor decomposition is to, given a tensor $T$ of rank $k$, decompose it as a sum of rank 1 tensors of appropriate dimensions. Jennrich's algorithm is commonly used for tensor decomposition. We denote the following theorem:
 \begin{theorem}

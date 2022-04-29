@@ -28,13 +28,14 @@ def timer(func):
         start = time()
         ret = func(*args, **kwargs)
         end = time()
+        print(type(ret))
         print('Execution time of %s(): %.5f seconds' % (func.__name__, end - start))
         return ret
     return f
 
 
 @timer # Decorator
-def generate_gaussian_samples(num_samples):
+def generate_gaussian_samples(num_samples: int) -> list:
     """Generate samples from a Gaussian distribution from uniformly distributed samples."""
     samples = []
     for _ in range(num_samples):
@@ -50,7 +51,7 @@ def generate_gaussian_samples(num_samples):
     return samples
 
 
-def draw_gaussian_samples(samples):
+def draw_gaussian_samples(samples: list) -> None:
     plt.hist(samples, bins=100)
     plt.title('Gaussian samples with variance R**2')
     plt.xlabel('Values')
@@ -58,7 +59,7 @@ def draw_gaussian_samples(samples):
 
 
 @timer # Decorator
-def generate_sample_from_unit_sphere(x=1):
+def generate_sample_from_unit_sphere() -> tuple:
     """Generate a triplet that lies on the surface of the unit sphere."""
     Z1 = np.random.normal(0,1)
     Z2 = np.random.normal(0,1)
@@ -66,12 +67,12 @@ def generate_sample_from_unit_sphere(x=1):
 
     norm = (Z1**2 + Z2**2 + Z3**2) ** 0.5
     X,Y,Z = Z1/norm, Z2/norm, Z3/norm
+
     assert(round(X**2 + Y**2 + Z**2, 3) == 1.0)
-    
     return (X,Y,Z)
 
 
-def draw_unit_sphere(point):
+def draw_unit_sphere(point: tuple) -> None:
     u, v = np.mgrid[0:2*np.pi:20j, 0:np.pi:10j]
     # Use spherical coordinate system
     x = np.cos(u)*np.sin(v)
