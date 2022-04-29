@@ -7,15 +7,15 @@ In 1795, the french mathematician Gaspard de Prony came up with a very useful tr
     \item find the zeroes of $p(x)$ to obtain the $\rho_j$'s.
 \end{enumerate}
 \paragraph{Link with super-resolution} Prony's method can in fact be applied to many domains. For example in microscopy, images often contain brightness spikes on the plane but the optical system that contains all the hardware to create the picture essentially acts as a low pass filter: it will keep the low frequencies of a signal and attenuate the frequencies that are higher than a pre-determined cutoff frequency. By doing so, those spikes are turned into what are called \textit{point spread functions}, that determine the performance of an imaging system. Similarly to our problem, the goal of Prony's method is to reconstruct the image by recovering estimates of the original spikes.\par 
-We can view the plane of an image as part of $\mathbb{R}^2$. Let its spikes be at positions $X\subset\mathbb{R}^2$ and let them have amplitude $a_x$. Note that $X$ is sparse. Taking the Fourier transform yields $$z_\alpha:=z_{\alpha_1,\alpha_2}=\sum_{x\in X}a_xe^{\alpha_1 x_1+\alpha_2 x_2},$$ where $\alpha=(\alpha_1,\alpha_2)\in\mathbb{Z}^2$. Through the low pass filter, we obtain a finite amount of measurements $$z_\alpha=\sum_{x\in X}a_x\rho_x^\alpha,$$ for $|\alpha_1|,|\alpha_2|\leq n$ where $\rho_x^\alpha=\rho_{x,1}^{\alpha_1}\rho_{x,2}^{\alpha_2}$ and $\rho_{x,j}=e^{ix_j}$ for $j=1,2$. Note that the recovery of the $z_\alpha$'s is exactly the 2D version of Prony's problem.
-\section{Univariate case: adaptation of Prony's method}
-The initial setting is as follows. We construct two $m\times m$ complex valued Hankel matrices $H_0$ and $H_1$, that is, matrices such that their skew-diagonals\footnote{A skew-diagonal is the diagonal in the North-East direction.} are constants. We have $D_w\in\mathbb{C}^{k\times k}$ where $[D_w]_{j,j}=w_j$ and $D_\mu\in\mathbb{C}^{k\times k}$ where $[D_\mu]_{j,j}=e^{i\pi\mu^{(j)}}$. We furthermore have a Vandermonde matrix $V_m\in\mathbb{C}^{m\times k}$ defined as $$V_m=
+We can view the plane of an image as part of $\mathbb{R}^2$. Let its spikes be at positions $X\subset\mathbb{R}^2$ and let them have amplitude $a_x$. Note that $X$ is sparse. Taking the Fourier transform yields $$z_\alpha:=z_{\alpha_1,\alpha_2}=\sum_{x\in X}a_xe^{\alpha_1 x_1+\alpha_2 x_2},$$ where $\alpha=(\alpha_1,\alpha_2)\in\mathbb{Z}^2$. Through the low pass filter, we obtain a finite amount of measurements $$z_\alpha=\sum_{x\in X}a_x\rho_x^\alpha,$$ for $|\alpha_1|,|\alpha_2|\leq n$ where $\rho_x^\alpha=\rho_{x,1}^{\alpha_1}\rho_{x,2}^{\alpha_2}$ and $\rho_{x,j}=e^{ix_j}$ for $j=1,2$. Note that the recovery of the $z_\alpha$'s is exactly the 2D version of Prony's problem: the $a$'s are our weights and the $\rho_x^\alpha$'s are our point sources.
+\section{Univariate case: Matrix-pencil method}
+As an extension of Prony's method which is not stable, we consider the main algorithm in the univariate case, the setting of which is as follows. We construct two $m\times m$ complex valued Hankel matrices $H_0$ and $H_1$, that is, matrices such that their skew-diagonals\footnote{A skew-diagonal is the diagonal in the North-East direction.} are constants. We have $D_w\in\mathbb{C}^{k\times k}$ where $[D_w]_{j,j}=w_j$ and $D_\mu\in\mathbb{C}^{k\times k}$ where $[D_\mu]_{j,j}=e^{i\pi\mu^{(j)}}$. We furthermore have a Vandermonde matrix $V_m\in\mathbb{C}^{m\times k}$ defined as $$V_m=
 \begin{pmatrix}
     1&\ldots&1\\
     \big(e^{i\pi\mu^{(1)}}\big)^1&\ldots&\big(e^{i\pi\mu^{(k)}}\big)^1\\
     \vdots&\ldots&\vdots\\
     \big(e^{i\pi\mu^{(1)}}\big)^{m-1}&\ldots&\big(e^{i\pi\mu^{(k)}}\big)^{m-1}
-\end{pmatrix}$$ We construct a 3rd order tensor $F\in\mathbb{C}^{m\times m\times 2}$ in which $F_{i,i',j}=[H_{j-1}]_{i,i'}$ for $j=1,2$ and $i,i'\in[m]$.
+\end{pmatrix}$$ We construct a 3rd order tensor $F\in\mathbb{C}^{m\times m\times 2}$ in which $F_{i,i',j}=[H_{j-1}]_{i,i'}$ for $j=1,2$ and $i,i'\in[m]$. The following computations will help us better understand tensor decomposition and the main algorithm. We first denote the following fact:
 \begin{fact}
     In the setting above, $F$ admits the unique rank $k$ tensor decomposition $F=V_m\otimes V_m\otimes (V_2D_w)$.
 \end{fact}
@@ -28,9 +28,10 @@ The initial setting is as follows. We construct two $m\times m$ complex valued H
         &=\sum_{n=1}^k w_n\big(e^{i\pi\mu^{(n)}}\big)^{i_1+i_2+i_3-3},
     \end{flalign*} for $i_1,i_2\in[m]$ and $i_3\in[2]$. It can be verified that the measurements that form both Hankel matrices are given by $$f(s)=\sum_{j\in[k]}w_j\big(e^{i\pi\mu^{(j)}}\big)^s,$$ with $s=0,\ldots,2m-1$ for $H_0$ and $s=1,\ldots,2m$ for $H_1$. For the details of the proof, see Appendix \ref{appendix:hankel}. Then, since $F_{i_1,i_2,i_3}=[H_{i_3-1}]_{i_1,i_2}$, for a fixed $i_3$ we have either $F_{i_1,i_2,1}=[H_0]_{i_1,i_2}$ or $F_{i_1,i_2,2}=[H_1]_{i_1,i_2}$. Note that since we are dealing with Hankel matrices, $[H_0]_{i_1,i_2}=f(i_1+i_2-2)$. Hence,
     $$F_{i_1,i_2,i_3}=\sum_{n\in[k]}w_n\big(e^{i\pi\mu^{(n)}}\big)^{i_1+i_2+i_3-3}=f(i_1+i_2+i_3-3),$$ as required.
-\end{proof}
+\end{proof}\par 
+Recall that Jennrich's algorithm computes the simultaneous diagonalisations of $F(I,I,v_1)$ and $F(I,I,v_2)$, in which $v_1$ and $v_2$ are two random projections of $\mathbb{R}^m$. Note that setting $v_1=e_1$ and $v_2=e_2$ yields $H_0$ and $H_1$ exactly. Hence, we conclude that the matrix-pencil method studied here is just a special case of Jennrich's algorithm where both projections are done on the two basis vectors $e_1$ and $e_2$.
 \section{Multivariate toy case}
-We follow the definitions given in the paper. We have $D_w=Diag(w_j)\in\mathbb{C}^{k\times k}$ and $[V_d]_{r,c}=e^{i\pi\mu_r^{(c)}}\in\mathbb{C}^{d\times k}$ the latter in which $\mu_n^{(i)}$ are i.i.d. $\sim Unif([-1,+1])$. Furthermore, we have $F_{n_1,n_2,n_3}=f(s)\big|_{s=e_{n_1}+e_{n_2}+e_{n_3}},$ for all $n_1,n_2,n_3\in[d]$. We have the following fact:
+This section describes a preview of the main algorithm when the measurements are not random and where we assume for simplicity that the point sources are uniformly distributed in $[-1,+1]$. We follow the definitions given in the paper. We have $D_w=Diag(w_j)\in\mathbb{C}^{k\times k}$ and $[V_d]_{r,c}=e^{i\pi\mu_r^{(c)}}\in\mathbb{C}^{d\times k}$ the latter in which $\mu_n^{(i)}$ are i.i.d. $\sim Unif([-1,+1])$. Furthermore, we have $F_{n_1,n_2,n_3}=f(s)\big|_{s=e_{n_1}+e_{n_2}+e_{n_3}},$ for all $n_1,n_2,n_3\in[d]$. We have the following fact:
 \begin{fact}
     In the setting above, $F$ admits the tensor decomposition $F=V_d\otimes V_d\otimes(V_dD_w)$.
 \end{fact}
@@ -42,4 +43,5 @@ We follow the definitions given in the paper. We have $D_w=Diag(w_j)\in\mathbb{C
         &=\sum_{j=1}^k w_je^{i\pi(\mu_{n_1}^{(j)}+\mu_{n_2}^{(j)}+\mu_{n_3}^{(j)})}\\
         &=f(s)\big|_{s=s^{(n_1)}+s^{(n_2)}+s^{(n_1)}}=f(e_{n_1}+e_{n_2}+e_{n_3}),
     \end{flalign*} as required.
-\end{proof}
+\end{proof}\par
+The key idea here is to notice that the entries $e^{i\pi\mu_n^{(j)}}$ are i.i.d. and uniformly distributed over the unit circle of the complex plane. This is due to the fact that the $\mu_n^{(j)}$ factors are uniform. This implies that the factor $V_d$ almost surely has full column rank and therefore that the tensor decomposition exists and is unique (since each vector contained in the tensor's matrices are linearly independent). Again by uniformity assumption, the condition number of $V_d$ concentrates around 1 so the above algorithm achieves stable recovery. We will see in more details in the next chapter.
