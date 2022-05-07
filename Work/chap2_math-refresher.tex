@@ -24,14 +24,22 @@ where $U$ again are the eigenvectors and $V$ the eigenvalues. Note that $A$ and 
     ||X||_p=\left(\sum_{i\in[n]}x_i^p\right)^{1/p}.
 \end{equation}
 Note that $p$ can take any value in $\mathbb{N}^*$ but the most common ones are 1, 2 or $\infty$. In essence, the $L^1$-norm is the sum of absolute values of our vector, the $L^2$-norm represents the Euclidean distance of the vector from the origin and the $L^\infty$ norm is by definition the largest element in the vector, in absolute value.
-\paragraph{Matrices} The same way we define a norm operator for vectors, we can define a similar operator for matrices, that will however have a slightly different meaning. Essentially, a matrix norm is a vector norm in a vector space whose elements are matrices. Let $A$ be a matrix of size $m\times n$. Equivalently, we define the $L^p$-norm of $A$ as 
+\paragraph{Matrices} The same way we define a norm operator for vectors, we can define a similar operator for matrices, that will however have a slightly different meaning. Essentially, a matrix norm is a vector norm in a vector space whose elements are matrices. Let $A$ be a matrix of size $m\times n$. We define the following important norms for $A$:
+\begin{flalign}
+    ||A||_1&=\max_{j\in[n]}\sum_{i\in[m]}|A_{i,j}|\\
+    ||A||_2&=\sqrt{\lambda_{max}(A^*A)}=\sigma_{max}(A)\\
+    ||A||_\infty&=\max_{i\in[m]}\sum_{j\in[n]}|A_{i,j}|,
+\end{flalign} where $\lambda_{max}(A^*A)$ is the largest eigenvalue of $A^*A$ in which $A^*$ denotes the conjugate transpose of $A$. The most important matrix norm in our case however is an equivalent version of the vector $L^2$-norm called the \textit{Frobenius} norm. It essentially represents the size of the matrix $A$, and we define it as 
 \begin{equation}
-    ||A||_p=\left(\sum_{i\in[m]}\sum_{j\in[n]}[A]_{i,j}^p\right)^{1/p}.
+    ||A||_F=\sqrt{\sum_{i\in[m]}\sum_{j\in[n]}A_{i,j}^2}.
 \end{equation}
-The most important matrix norm in our case is an equivalent version of the $L^2$-norm called the \textit{Frobenius} norm. It basically represents the size of the matrix $A$, and we define it as 
-\begin{equation}
-    ||A||_F=\sqrt{\sum_{i\in[m]}\sum_{j\in[n]}[A]_{i,j}^2}.
-\end{equation}
+\subsection{Gershgorin's disk theorem}
+A powerful result of linear algebra allows us to relate the eigenvalues of some matrix $A$ to points in the complex plane. Namely, the Gershgorin's disk theorem gives us a pretty good and efficient way to find the eigenvalues of a particular matrix by drawing disks in the complex plane and relating them to the eigenvalues. For the purpose, let $Y\in\mathbb{C}^{k\times k}$ be a complex valued matrix. For every $j\in[k]$, let $$\mathcal{D}_j=\big\{x\in\mathbb{C}:||x-Y_{j,j}||\leq\sum_{j'\neq j}|Y_{j,j'}|\big\}$$ be the disk associated with the $j$'th row of $Y$, defined on the complex plane. Then, Gershgorin's disk theorem states that all the eigenvalues of $Y$ must lie within the union of all the above defined disks. The intuition behind this theorem starts with the definition of an eigenvalue. Suppose for instance that $\lambda$ is an eigenvalue of $Y$. Then we know we can write $Yv=\lambda v$, where $v$ is an eigenvector of $Y$. Select $j$ to be the index whose entry has largest magnitude in $v$. Writing the matrix-vector product as a sum yields $[Yv]_j=\sum_{j'\in[n]}Y_{j,j'}v_{j'}=\lambda v_j$. We can split this sum into two distinct sums as $\sum_{j'\in[n]}Y_{j,j'}v_{j'}=Y_{j,j}v_j+\sum_{j'\neq j}Y_{j,j'}v_{j'}$. Putting the factors of $v_{j'}$ on the same side gives us $$\sum_{j'\neq j}Y_{j,j'}v_{j'}=(\lambda-Y_{j,j})v_j.$$ We can divide by $v_j$ on both sides and take the absolute value to obtain $$\bigg|\sum_{j'\neq j}Y_{j,j'}v_{j'}/v_j\bigg|=\big|\lambda-Y_{j,j}\big|.$$ Using the triangle inequality for absolute values, we get
+\begin{flalign*}
+    \big|\lambda-Y_{j,j}\big|&\leq\sum_{j'\neq j}\big|Y_{j,j'}v_{j'}/v_j\big|\\
+    &\leq\sum_{j'\neq j}\big|Y_{j,j'}\big|\big|v_{j'}/v_j\big|\text{ since $|ab|=|a||b|$ for any $a,b$}\\
+    &\leq\sum_{j'\neq j}\big|Y_{j,j'}\big|,
+\end{flalign*} where in the last line we used the fact that $v_j$ has the largest magnitude in $v$ such that $v_j\geq v_{j'}$ for every $j$. Hence, the Gershgorin disk centered at some diagonal $j$ has radius always at most the sum of all non-diagonal entries of $Y$ of the same row $j$.
 
 \section{Tensor decomposition}
 \subsection{Gentle introduction}
