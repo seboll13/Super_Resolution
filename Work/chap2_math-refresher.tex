@@ -2,10 +2,10 @@
 \section{A mathematical theory of super-resolution}
 \paragraph{Mathematical abstraction} We consider $k$ point sources in $d$ dimensions, where the points are separated by a distance at least $\Delta$ (in Euclidean distance). The $d$-dimensional signal $x(t)$ can be modeled as a weighted sum of $k$ Dirac measures in $\mathbb{R}^d$ as $$x(t)=\sum_{j=1}^k w_j\delta_{\mu^{(j)}},$$ where the $\mu^{(j)}$'s are the point sources in $\mathbb{R}^d$ and $w_j\in\mathbb{C}$ the weights such that $|w_j|<C$ for every $j\in[k]$ and some absolute constant $C>0$. $\Delta$ is by definition the minimal possible distance between any two pair of points of the $d$-dimensional plane. Formally, we regard $\Delta$ in terms of Euclidean distance as $$\Delta=\min_{j\neq j'}||\mu^{(j)}-\mu^{(j')}||_2.$$
 \paragraph{Measurement function} There are two main factors that represent our signal: the weights $w_j$ and the complex low pass point spread functions $e^{i\pi\langle s,t\rangle}$ for some measurement $s$. The former is simply a weighting factor that is not too relevant to us here. The latter however represents the response of an imaging system to a point source. That is, it determines the overall performance level of our system and will be of crucial interest to our study.\par 
-We define the measurement function $f(s):\mathbb{R}^d\to\mathbb{C}$ as being the convolution of the point source $x(t)$ with the point spread function $e^{i\pi\langle s,t\rangle}$. Formally, $$f(s)=\sum_{j\in[k]}w_je^{i\pi\langle\mu^{(j)},s\rangle}.$$ The measurements $s$ in the noisy setting are corrupted with a uniformly bounded perturbation $z$ so that the noisy recovery problem becomes $$\tilde{f}(s)=f(s)+z(s),$$ in which $|z(s)|\leq\epsilon_z$ for every $s$ and a constant $\epsilon_z\in(0,1/2)$. The idea is that given access to the signal $x(t)$, we wish to generate a set of random bandlimited Fourier measurements and evaluate the noisy function $\tilde{f}$ on every measurement $s$ in order to recover the parameters $\{w_j,\mu^{(j)}:j\in[k]\}$ of the point source signal as best as we can. The problem statement will be described in more detail in Chapter 4.
+We define the measurement function $f(s):\mathbb{R}^d\to\mathbb{C}$ as being the convolution of the point source $x(t)$ with the point spread function $e^{i\pi\langle s,t\rangle}$. Formally, $$f(s)=\sum_{j\in[k]}w_je^{i\pi\langle\mu^{(j)},s\rangle}.$$ The function $f$ is in essence a sum of weighted Fourier coefficients. Note that the measurements $s$ in the noisy setting are corrupted with a uniformly bounded perturbation $z$ so that the noisy recovery problem becomes $$\tilde{f}(s)=f(s)+z(s),$$ in which $|z(s)|\leq\epsilon_z$ for every $s$ and a constant $\epsilon_z\in(0,1/2)$. The idea is that given access to the signal $x(t)$, we wish to generate a set of random bandlimited Fourier measurements and evaluate the noisy function $\tilde{f}$ on every measurement $s$ in order to recover the parameters $\{w_j,\mu^{(j)}:j\in[k]\}$ of the point source signal as best as we can. The problem statement will be described in more detail in Chapter 4.
 
 \section{Main tools}
-The main mathematical tools that are needed to understand the paper essentially lie around the subject of linear algebra. They include operations related to vectors, matrices and tensors. We also require some probabilistic analysis tools since the algorithm is partly random. In this chapter, we introduce those tools, prove the more important results and closely relate them to the paper. 
+The main mathematical tools that are needed to understand the paper essentially lie around the subject of linear algebra. They include notions related to vectors, matrices and tensors. We also require some probabilistic analysis tools since the algorithm is partly random. In this chapter, we introduce those tools, prove the more important results and closely relate them to the paper.
 \subsection{Generalised eigenvalue problem}
 Before introducing the generalised eigenvalue problem, it is important to recall what a condition number is for a particular matrix. Suppose for instance we have a matrix $X\in\mathbb{R}^{m\times n}$. We let $\lambda_1,\ldots,\lambda_n$ be the eigenvalues of $X^TX$ (with repetitions) and arrange them so that $\lambda_1\geq\ldots\geq\lambda_n\geq 0$. Then, the $\sigma_1\geq\ldots\geq\sigma_n\geq 0$ such that $\sigma_i=\sqrt{\lambda_i}$ are called the \textit{singular values} of $X$. Define $\sigma_{max}(X)=\sigma_1$ and $\sigma_{min}(X)=\sigma_n$. We then define the condition number of a matrix to be the ratio between the largest and the smallest singular value of $X$. That is 
 \begin{equation}
@@ -27,9 +27,9 @@ Note that $p$ can take any value in $\mathbb{N}^*$ but the most common ones are 
 \paragraph{Matrices} The same way we define a norm operator for vectors, we can define a similar operator for matrices, that will however have a slightly different meaning. Essentially, a matrix norm is a vector norm in a vector space whose elements are matrices. Let $A$ be a matrix of size $m\times n$. We define the following important norms for $A$:
 \begin{flalign}
     ||A||_1&=\max_{j\in[n]}\sum_{i\in[m]}|A_{i,j}|\\
-    ||A||_2&=\sqrt{\lambda_{max}(A^*A)}=\sigma_{max}(A)\\
+    ||A||_2&=\sqrt{\lambda_{max}(A^*A)}=\sigma_{max}(A)\label{eqn:spectral_norm}\\
     ||A||_\infty&=\max_{i\in[m]}\sum_{j\in[n]}|A_{i,j}|,
-\end{flalign} where $\lambda_{max}(A^*A)$ is the largest eigenvalue of $A^*A$ in which $A^*$ denotes the conjugate transpose of $A$. The most important matrix norm in our case however is an equivalent version of the vector $L^2$-norm called the \textit{Frobenius} norm. It essentially represents the size of the matrix $A$, and we define it as 
+\end{flalign} where $\lambda_{max}(A^*A)$ is the largest eigenvalue of $A^*A$ in which $A^*$ denotes the conjugate transpose of $A$. Note that equality \ref{eqn:spectral_norm} is sometimes called the \textit{spectral norm} of a matrix. We also consider another important matrix norm called the \textit{Frobenius} norm, which is an equivalent version of the vector $L^2$-norm. It essentially represents the size of the matrix $A$, and we define it as 
 \begin{equation}
     ||A||_F=\sqrt{\sum_{i\in[m]}\sum_{j\in[n]}A_{i,j}^2}.
 \end{equation}
@@ -40,6 +40,17 @@ A powerful result of linear algebra allows us to relate the eigenvalues of some 
     &\leq\sum_{j'\neq j}\big|Y_{j,j'}\big|\big|v_{j'}/v_j\big|\text{ since $|ab|=|a||b|$ for any $a,b$}\\
     &\leq\sum_{j'\neq j}\big|Y_{j,j'}\big|,
 \end{flalign*} where in the last line we used the fact that $v_j$ has the largest magnitude in $v$ such that $v_j\geq v_{j'}$ for every $j$. Hence, the Gershgorin disk centered at some diagonal $j$ has radius always at most the sum of all non-diagonal entries of $Y$ of the same row $j$.
+\subsection{Probabilistic inequalities}
+Here we present the main probability bounds that are used to prove the correctness of the main algorithm. The first lemma is a generalisation of the Hoeffding bound to random matrices. It tells us that with high probability, the values of a random Hermitian matrix concentrate around the mean. The second considers the projection of a high dimensional random vector onto a lower dimension plane. Namely, suppose that we consider a random vector that lies on the $m$-dimensional unit sphere and another fixed vector. Then, the lemma states that with high probability, the absolute value of their dot product is large. We now state the aforementionned lemmas:
+\begin{lemma} (Matrix Hoeffding)
+    Let $\{X^{(1)},\ldots,X^{(m)}\}$ be a set of independent, random, Hermitian matrices of dimension $k\times k$, with identical distribution $X$. Assume that $E[X]$ is finite, and $X^2\preceq\sigma^2 I$ for some positive constant $\sigma$ almost surely. Then, for all $\epsilon\geq 0$, $$Pr\left(\left|\left|\frac{1}{m}\sum_{i=1}^m X^{(i)} - E[X]\right|\right|_2\geq\epsilon\right)\leq ke^{-\frac{m^2\epsilon^2}{8\sigma^2}}.$$
+\end{lemma}
+\begin{lemma} (Vector random projection)
+    Let $a\in\mathbb{R}^m$ be a random vector distributed uniformly over the $m$-dimensional unit sphere and fix $v\in\mathbb{C}^m$. Then, for $\delta\in(0,1)$, $$Pr\left(|\langle a,v\rangle|\leq\frac{||v||_2}{\sqrt{em}}\delta\right)\leq\delta.$$
+\end{lemma}
+\begin{proof} (for vector random projection)
+    We give an intuitive proof of the above lemma, which is mostly based on the lemma 2.2 from \cite{proofJLLemma}.
+\end{proof}
 
 \section{Tensor decomposition}
 \subsection{Gentle introduction}
