@@ -49,14 +49,34 @@ Here we present the main probability bounds that are used to prove the correctne
     Let $a\in\mathbb{R}^m$ be a random vector distributed uniformly over the $m$-dimensional unit sphere and fix $v\in\mathbb{C}^m$. Then, for $\delta\in(0,1)$, $$Pr\left(|\langle a,v\rangle|\leq\frac{||v||_2}{\sqrt{em}}\delta\right)\leq\delta.$$
 \end{lemma}
 \begin{proof} (for vector random projection)
-    We give an intuitive proof of the above lemma, which is mostly based on the lemma 2.2 from \cite{proofJLLemma}.
+    We give an intuitive proof of the above lemma, which is mostly based on lemma 2.2 from \cite{proofJLLemma}. Let $X_1,\ldots,X_d$ be independent samples from a standard Gaussian distribution and let $Y=(X_1,\ldots,X_d)/||X||$ be a vector formed by the normalised Gaussians. It is straightforward to see that $Y$ is uniformly distributed on the $d$-dimensional sphere. Let now $Z\in\mathbb{R}^k$ be the projection of $Y$ onto the first $k$ coordinates and let $L=||Z||^2$. Observe that $E[L]=d/k$ for $d<k$. Then, it is true that 
+    \begin{align}
+        Pr\big(L\leq\beta k/d\big)\leq\beta e^{\frac{k}{2}(1-\beta)},\quad\beta<1\\
+        Pr\big(L\geq\beta k/d\big)\leq\beta e^{\frac{k}{2}(1-\beta)},\quad\beta>1
+    \end{align}
+    Both bounds together tell us that the squared spectral norm of the projection is in fact fairly concentrated around its expectation. Now to apply the above to our lemma, set $L$ to be $|\langle a,v\rangle|^2$ so that the bound becomes $$Pr\left(|\langle a,v\rangle|\leq\frac{\sqrt{\beta}||v||_2}{\sqrt{m}}\right)\leq\beta e^{\frac{k}{2}(1-\beta)}.$$
+    Setting $\beta=\delta^2/e$ yields 
+    $$Pr\left(|\langle a,v\rangle|\leq\frac{||v||_2}{\sqrt{em}}\delta\right)\leq\frac{\delta^2}{e}e^{\frac{k}{2}(1-\delta^2/e)}.$$
+    Hence to prove the bound, it suffices to show that 
+    $\frac{\delta^2}{e}e^{\frac{k}{2}(1-\delta^2/e)}\leq\delta$ or equivalently $\delta e^{\frac{k}{2}(1-\delta^2/e)}\leq e.$
+    Since by assumption $\delta<1$ and $1<e^{k(1+\delta^2/e)/2}$, the proof is completed.
 \end{proof}
 
 \section{Tensor decomposition}
-\subsection{Gentle introduction}
-A tensor is a generalisation of a matrix to more than two dimensions. We can think of a tensor as a point in $\mathbb{C}^{m_1\times\ldots\times m_k}$ where $k$ is the order of the tensor. Most of the time here, $k=3$ since three dimensions suffice for our analysis. Note that if $T$ is an order three tensor of dimensions $m\times n\times p$, we can view it as a collection of $p$ matrices of size $m\times n$ stacked on top of each other. For example, the entry $A_{i,j,k}$ of a 3-tensor $A$ will simply be the $(i,j)$'th entry of the $k$'th matrix \cite{tensorMethods}.\par
-We define the \textit{rank} of a tensor $V$ as the minimum $r$ such that we can write $V$ as the sum of rank one tensors. A rank one tensor will be decomposed in the form of a tensor product of three matrices $A$, $B$ and $C$ as $V=A\otimes B\otimes C$, where each matrix has the same size than that defined above \cite{algoToolbox}. The decomposition is element-wise defined as $V_{i_1,i_2,i_3}=\sum_{j=1}^r A_{i_1,j}B_{i_2,j}C_{i_3,j}$, for every $i_1\in[m], i_2\in[n]$ and $i_3\in[p]$.\par 
-An alternative definition is given using the notion of a multi-linear mapping. Namely, for given dimensions $m_A$, $m_B$, $m_C$, the mapping $V(\cdot,\cdot,\cdot):\mathbb{C}^{m\times m_A}\times\mathbb{C}^{m\times m_B}\times\mathbb{C}^{m\times m_C}\to\mathbb{C}^{m_A\times m_B\times m_C}$ is defined as: $$\left[V(X_A,X_B,X_C)\right]_{i_1,i_2,i_3}=\sum_{j_1,j_2,j_3\in[m]}V_{j_1,j_2,j_3}[X_A]_{j_1,i_1}[X_B]_{j_2,i_2}[X_C]_{j_3,i_3}.$$
+A tensor is a generalisation of a matrix to more than two dimensions. We can think of a tensor as a point in $\mathbb{C}^{m_1\times\ldots\times m_p}$ where $p$ is the order of the tensor. Most of the time here, $p=3$ since three dimensions suffice for our analysis. Note that if $T$ is an order three tensor of dimensions $m\times n\times p$, we can view it as a collection of $p$ matrices of size $m\times n$ stacked on top of each other. For example, the entry $A_{i,j,k}$ of a 3-tensor $A$ will simply be the $(i,j)$'th entry of the $k$'th matrix \cite{tensorMethods}. Furthermore, we define the \textit{rank} of a tensor $T$ as the minimum $k$ such that we can write $T$ as the sum of rank one tensors.
+\subsection{Canonical polyadic decomposition}
+Canonical Polyadic (CP) decomposition (or \textit{tensor rank decomposition}) is a procedure for tensors equivalent to that of the SVD for matrices in which we wish to express a $p$-tensor as an outer product of $p$ vectors. We first recall that the outer product of two vectors $u\in\mathbb{C}^m$ and $v\in\mathbb{C}^n$ gives a matrix $M\in\mathbb{C}^{m\times n}$ such that $[M]_{r,c}=u_rv_c$ for $r\in[m]$ and $c\in[n]$. From there, suppose that we are working with a rank $k$ 3-tensor $V\in\mathbb{C}^{m\times n\times p}$. CP decomposition allows us to express $V$ as
+\begin{equation}
+    V=\sum_{n\in[k]}[A]_{:,n}\circ[B]_{:,n}\circ[C]_{:,n},    
+\end{equation} where $\circ$ denotes the outer product, $A\in\mathbb{C}^{m\times k}$, $B\in\mathbb{C}^{n\times k}$, $C\in\mathbb{C}^{p\times k}$ and where $[M]_{:,n}$ denotes the vector formed by the $n$'th column of $M$. We then say that the tensor $V$ admits the decomposition $V=A\otimes B\otimes C$, where $\otimes$ denotes the tensor product operation. Equivalently, element-wise we have 
+\begin{equation}
+    V_{j_1,j_2,j_3}=\sum_{n\in[k]}A_{j_1,n}B_{j_2,n}C_{j_3,n},
+\end{equation} for $j_1\in[m],j_2\in[n],j_3\in[p]$.
+\subsection{Tensor decomposition as a multilinear mapping}
+We can use an alternative definition of tensor decomposition using the notion of a multi-linear mapping. Namely, for given dimensions $m_A$, $m_B$, $m_C$, the mapping $V(\cdot,\cdot,\cdot):\mathbb{C}^{m\times m_A}\times\mathbb{C}^{m\times m_B}\times\mathbb{C}^{m\times m_C}\to\mathbb{C}^{m_A\times m_B\times m_C}$ is defined as: 
+\begin{equation}
+    \left[V(X_A,X_B,X_C)\right]_{i_1,i_2,i_3}=\sum_{j_1,j_2,j_3\in[m]}V_{j_1,j_2,j_3}[X_A]_{j_1,i_1}[X_B]_{j_2,i_2}[X_C]_{j_3,i_3}.
+\end{equation}
 We can verify that for a particular vector $a\in\mathbb{C}^m$, the projection $V(I,I,a)$ of $V$ along the 3rd dimension is $V(I,I,a)=ADiag(C^T a)B^T$ as long as $V$ admits a tensor decomposition $V=A\otimes B\otimes C$. Indeed,
 \begin{flalign*}
     \left[V(I,I,a)\right]_{i_1,i_2}&=\sum_{j_1,j_2,j_3\in[m]}V_{j_1,j_2,j_3}[I]_{j_1,i_1}[I]_{j_2,i_2}[a]_{j_3}\\
