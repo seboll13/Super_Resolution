@@ -2,7 +2,7 @@
 \section{A mathematical theory of super-resolution}
 \paragraph{Mathematical abstraction} We consider $k$ point sources in $d$ dimensions, where the points are separated by a distance at least $\Delta$ (in Euclidean distance). The $d$-dimensional signal $x(t)$ can be modeled as a weighted sum of $k$ Dirac measures in $\mathbb{R}^d$ as $$x(t)=\sum_{j=1}^k w_j\delta_{\mu^{(j)}},$$ where the $\mu^{(j)}$'s are the point sources in $\mathbb{R}^d$ and $w_j\in\mathbb{C}$ the weights such that $|w_j|<C$ for every $j\in[k]$ and some absolute constant $C>0$. $\Delta$ is by definition the minimal possible distance between any two pair of points of the $d$-dimensional plane. Formally, we regard $\Delta$ in terms of Euclidean distance as $$\Delta=\min_{j\neq j'}||\mu^{(j)}-\mu^{(j')}||_2.$$
 \paragraph{Measurement function} There are two main factors that represent our signal: the weights $w_j$ and the complex low pass point spread functions $e^{i\pi\langle s,t\rangle}$ for some measurement $s$. The former is simply a weighting factor that is not too relevant to us here. The latter however represents the response of an imaging system to a point source. That is, it determines the overall performance level of our system and will be of crucial interest to our study.\par 
-We define the measurement function $f(s):\mathbb{R}^d\to\mathbb{C}$ as being the convolution of the point source $x(t)$ with the point spread function $e^{i\pi\langle s,t\rangle}$. Formally, $$f(s)=\sum_{j\in[k]}w_je^{i\pi\langle\mu^{(j)},s\rangle}.$$ The function $f$ is in essence a sum of weighted Fourier coefficients. Note that the measurements $s$ in the noisy setting are corrupted with a uniformly bounded perturbation $z$ so that the noisy recovery problem becomes $$\tilde{f}(s)=f(s)+z(s),$$ in which $|z(s)|\leq\epsilon_z$ for every $s$ and a constant $\epsilon_z\in(0,1/2)$. The idea is that given access to the signal $x(t)$, we wish to generate a set of random bandlimited Fourier measurements and evaluate the noisy function $\tilde{f}$ on every measurement $s$ in order to recover the parameters $\{w_j,\mu^{(j)}:j\in[k]\}$ of the point source signal as best as we can. The problem statement will be described in more detail in Chapter 4.
+We define the measurement function $f(s):\mathbb{R}^d\to\mathbb{C}$ as being the convolution of the point source $x(t)$ with the point spread function $e^{i\pi\langle s,t\rangle}$. Formally, $$f(s)=\sum_{j\in[k]}w_je^{i\pi\langle\mu^{(j)},s\rangle}.$$ The function $f$ is in essence a sum of weighted Fourier coefficients. Note that the measurements $s$ in the noisy setting are corrupted with a uniformly bounded perturbation $z$ so that the noisy recovery problem becomes $$\widetilde{f}(s)=f(s)+z(s),$$ in which $|z(s)|\leq\epsilon_z$ for every $s$ and a constant $\epsilon_z\in(0,1/2)$. The idea is that given access to the signal $x(t)$, we wish to generate a set of random bandlimited Fourier measurements and evaluate the noisy function $\widetilde{f}$ on every measurement $s$ in order to recover the parameters $\{w_j,\mu^{(j)}:j\in[k]\}$ of the point source signal as best as we can. The problem statement will be described in more detail in Chapter 4.
 
 \section{Main tools}
 The main mathematical tools that are needed to understand the paper essentially lie around the subject of linear algebra. They include notions related to vectors, matrices and tensors. We also require some probabilistic analysis tools since the algorithm is partly random. In this chapter, we introduce those tools, prove the more important results and closely relate them to the paper.
@@ -84,7 +84,16 @@ We can verify that for a particular vector $a\in\mathbb{C}^m$, the projection $V
     &=\sum_{j_3\in[m]}\sum_{n\in[k]} A_{i_1,n}B_{i_2,n}C_{j_3,n}[a]_{j_3}\\
     &=\underbrace{\sum_{n\in[k]}A_{i_1,n}B_{i_2,n}}_{=AB}\underbrace{\sum_{j_3\in[m]}C_{j_3,n}[a]_{j_3}}_{=Diag(C^T a)}\\
     &=\left[ADiag(C^T a)B^T\right]_{i_1,i_2}.
-\end{flalign*} Since the above is true for every $i_1,i_2$, and we do not consider the $i_3$ coordinate since $a$ is a vector, we get the desired equality.
+\end{flalign*} Since the above is true for every $i_1,i_2$, and we do not consider the $i_3$ coordinate since $a$ is a vector, we get the desired equality.\par 
+In a more general case, we can consider the projection of the tensor $V$ on three $m$ column matrices $X$, $Y$ and $Z$. Again we suppose that $V$ admits the decomposition $A\otimes B\otimes C$. In that case, it is true that 
+\begin{flalign*}
+    [V(X,Y,Z)]_{i_1,i_2,i_3}&=\sum_{j_1,j_2,j_3\in[m]}V_{j_1,j_2,j_3}[X]_{j_1,i_1}[Y]_{j_2,i_2}[Z]_{j_3,i_3}\\
+    &=\sum_{j_1,j_2,j_3\in[m]}\sum_{n\in[k]}A_{j_1,n}B_{j_2,n}C_{j_3,n}[X]_{j_1,i_1}[Y]_{j_2,i_2}[Z]_{j_3,i_3}\\
+    &=\sum_{j_1,j_2,j_3\in[m]}\sum_{n\in[k]}[X^T]_{i_1,j_1}A_{j_1,n}[Y^T]_{i_2,j_2}B_{j_2,n}[Z^T]_{i_3,j_3}C_{j_3,n}\\
+    &=\sum_{n\in[k]}[X^TA]_{i_1,n}[Y^TB]_{i_2,n}[Z^TC]_{i_3,n}\\
+    &=[(X^TA)\otimes(Y^TB)\otimes(Z^TC)]_{i_1,i_2,i_3}.
+\end{flalign*}
+Hence, we conclude that $V(X,Y,Z)$ admits the decomposition $(X^TA)\otimes(Y^TB)\otimes(Z^TC)$ for any arbitrary matrices $X$, $Y$ and $Z$.
 \subsection{Tensor Frobenius norm}
 We can also extend the matrix norm definition to that of a tensor. However in our work, we only will need the equivalent Frobenius norm which will be useful in the main algorithm. For the purpose, let $V$ be a rank $k$ 3-tensor of dimensions $m\times n\times 3$. Then, the Frobenius norm of $V$ is simply defined as 
 \begin{equation}
@@ -100,13 +109,13 @@ The aforementioned algorithm is described in Algorithm \ref{alg:Jennrich}.
     \caption{Jennrich's algorithm for tensor decomposition}
     \label{alg:Jennrich}
     \begin{algorithmic}
-        \State {\bf Input}: a tensor $\tilde{F}\in\mathbb{C}^{m\times m\times 3}$ of rank $k$.
+        \State {\bf Input}: a tensor $\widetilde{F}\in\mathbb{C}^{m\times m\times 3}$ of rank $k$.
         \State Choose random unit vectors $a,b\in\mathbb{R}^m$.
-        \State Compute $\tilde{F}(I,I,a)=UD_aV^T$, where $D_a=Diag(\langle w^{(i)},a\rangle)$.
-        \State Compute $\tilde{F}(I,I,b)=UD_bV^T$, where $D_b=Diag(\langle w^{(i)},b\rangle)$.
-        \State Compute the diagonalisations $\tilde{F}(I,I,a)\tilde{F}(I,I,b)^{-1}$ and $\tilde{F}(I,I,b)\tilde{F}(I,I,a)^{-1}$.
+        \State Compute $\widetilde{F}(I,I,a)=UD_aV^T$, where $D_a=Diag(\langle w^{(i)},a\rangle)$.
+        \State Compute $\widetilde{F}(I,I,b)=UD_bV^T$, where $D_b=Diag(\langle w^{(i)},b\rangle)$.
+        \State Compute the diagonalisations $\widetilde{F}(I,I,a)\widetilde{F}(I,I,b)^{-1}$ and $\widetilde{F}(I,I,b)\widetilde{F}(I,I,a)^{-1}$.
         \State Solve the linear system to recover the $w_j$'s.
         \State {\bf Return} $U$, $V$, $W$.
     \end{algorithmic}
-\end{algorithm}
-Observe that $$\tilde{F}(I,I,a)\tilde{F}(I,I,b)^{-1}=UD_aV^T(V^T)^{-1}D_b^{-1}U^{-1}=UD_aD_b^{-1}U^{-1},$$ and similarly $$\tilde{F}(I,I,a)^{-1}\tilde{F}(I,I,b)=(V^T)^{-1}D_a^{-1}U^{-1}UD_bV^T=(V^T)^{-1}D_a^{-1}D_bV^T.$$ The correctness of the algorithm follows from the uniqueness of eigendecomposition of a matrix when the eigenvalues are distinct. For a random choice of $a$ and $b$ (in our case we choose the basis vectors $e_1$ and $e_2$), with high probability the eigendecompositions are unique so we can recover the $u_i$'s and the $v_i$'s easily by simply recovering the columns of $U$ and $V$, respectively.
+\end{algorithm}\par
+Observe that $$\widetilde{F}(I,I,a)\widetilde{F}(I,I,b)^{-1}=UD_aV^T(V^T)^{-1}D_b^{-1}U^{-1}=UD_aD_b^{-1}U^{-1},$$ and similarly $$\widetilde{F}(I,I,a)^{-1}\widetilde{F}(I,I,b)=(V^T)^{-1}D_a^{-1}U^{-1}UD_bV^T=(V^T)^{-1}D_a^{-1}D_bV^T.$$ The correctness of the algorithm follows from the uniqueness of eigendecomposition of a matrix when the eigenvalues are distinct. For a random choice of $a$ and $b$ (in our case we choose the basis vectors $e_1$ and $e_2$), with high probability the eigendecompositions are unique so we can recover the $u_i$'s and the $v_i$'s easily by simply recovering the columns of $U$ and $V$, respectively.

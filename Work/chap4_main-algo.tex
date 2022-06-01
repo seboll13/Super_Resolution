@@ -37,7 +37,7 @@ We also let $m'=m+d+1$ for writing simplicity. Note that each measurement is a $
     \end{algorithmic}
 \end{algorithm}
 \subsection{Why we use tensor decomposition}
-Jennrich's algorithm consists of a tensor decomposition that allows us to recover the estimates of the point sources. Namely, given a noisy tensor $\widetilde{F}$, it will spit out a decomposition that consists of three matrices, one of which we are most interested in. It is important to note that the crucical part in the adaptation of the original algorithm is the fact that we reduce the dimensionality of the original tensor in order to compute the decomposition faster. Indeed, the truncated SVD operation will allow us to recover the $k$ largest singular values such that the newly constructed tensor $E$ is of rank $k$ and its projections on $e_1$ becomes invertible. We can then apply the original algorithm on $E$ and spit out the desired decomposition.\par
+Jennrich's algorithm consists of a tensor decomposition that allows us to recover the estimates of the point sources. Namely, given a noisy tensor $\widetilde{F}$, it will spit out a decomposition that consists of three matrices, one of which we are most interested in. It is important to note that the crucical part in the adaptation of the original algorithm is the fact that we reduce the dimensionality of the original tensor in order to compute the decomposition faster. Indeed, the truncated SVD operation will allow us to recover the $k$ largest singular values such that the newly constructed tensor $E$ is of rank $k$ and its projection on $e_1$ becomes invertible. We can then apply the original algorithm on $E$ and spit out the desired decomposition.\par
 We denote the following fact:
 \begin{fact}
     In the exact case (i.e. when $\epsilon_z=0$), the constructed tensor $F$ admits a rank-$k$ decomposition $$F=V_{S'}\otimes V_{S'}\otimes (V_2D_w).$$
@@ -65,32 +65,25 @@ The main guarantee on the stability of the recovery of the point sources is give
 \section{Analysis}
 \subsection{Stability of tensor decomposition}
 A main factor of stability resides in the tensor decomposition procedure. Since the measurements are linearly independent, the tensor decomposition exists and is unique up to column permutation and rescaling. The next few paragraphs go through steps that allow us to prove the stability guarantee that Jennrich's algorithm offers us.
-\paragraph{Setup in the non-noisy case} Suppose that $F$ admits the decomposition $F=V\otimes V\otimes (V_2D_w)\in\mathbb{C}^{m\times m\times 3}$ and that $\widetilde{F}$ is element-wise close to $F$, that is, each of their elements differ by at most a constant $\epsilon_z$ in absolute value. If $\widetilde{F}$ is passed as input to Jennrich's algorithm, it happens that $\widehat{V}$ is close enough to $V$ with high probability. To show this, denote $D_1=diag([V_2]_{1,:}D_w)$ and $D_2=diag([V_2]_{2,:}D_w)$ where $[V_2]_{i,:}$ is the vector formed by the $i$'th row of $V_2$. Let $F_1=F(I,I,e_1)$. By previous computations, we know that $F_1=VD_1V^T$. Consider its SVD $F_1=P\Lambda P^T$ and write $U=P^TV$. Furthermore, define the whitened\footnote{A whitening transformation has the objective of linearly transforming a vector of correlated random variables into a new vector, the elements of which are uncorrelated. Hence, the random elements that form the new tensor $E$ will have zero correlation.} rank-$k$ tensor $E=F(P,P,I)$. We now show why this definition of $E$ is useful to us.
-\begin{fact}
-    In the above setting, $E=F(P,P,I)=U\otimes U\otimes (V_2D_w)\in\mathbb{C}^{k\times k\times 3}$.
-\end{fact}
-\begin{proof}
-    By direct computation, we have 
-    \begin{flalign*}
-        E_{n_1,n_2,n_3}=F(P,P,I)_{n_1,n_2,n_3}&=\sum_{j_1,j_2\in[m']}\sum_{j_3\in[3]}F_{j_1,j_2,j_3}[P]_{j_1,n_1}[P]_{j_2,n_2}[I]_{j_3,n_3}\\
-        &=\sum_{j_1,j_2\in[m']}\sum_{j_3\in[3]}\sum_{n\in[k]}[V]_{j_1,n}[V]_{j_2,n}[V_2D_w]_{j_3,n}[P]_{j_1,n_1}[P]_{j_2,n_2}[I]_{j_3,n_3}\\
-        &=\sum_{j_1,j_2\in[m']}\sum_{n\in[k]}[V]_{j_1,n}[P]_{j_1,n_1}[V]_{j_2,n}[P]_{j_2,n_2}[V_2D_w]_{n_3,n}\\
-        &=\sum_{j_1,j_2\in[m']}\sum_{n\in[k]}[P^T]_{n_1,j_1}[V]_{j_1,n}[P^T]_{n_2,j_2}[V]_{j_2,n}[V_2D_w]_{n_3,n}\\
-        &=\sum_{n\in[k]}[P^TV]_{n_1,n}[P^TV]_{n_2,n}[V_2D_w]_{n_3,n},
-    \end{flalign*} which is equivalent to writing that $E=(P^TV)\otimes(P^TV)\otimes(V_2D_w)$ when summing over all possible $n_1,n_2$ and $n_3$'s. This concludes the proof.
-\end{proof}\par
-Now slice the tensor $E$ in two such that we get its projections on the first two basis vectors of the plane. Formally, we have $E_1=E(I,I,e_1)$ and $E_2=E(I,I,e_2)$. Observe that $E_1=UD_1U^T$ and $E_2=UD_2U^T$. Thus, computing $E_1E_2^{-1}$ yields
+\paragraph{Setup in the non-noisy case} Suppose that $F$ admits the decomposition $F=V\otimes V\otimes (V_2D_w)\in\mathbb{C}^{m\times m\times 3}$ and that $\widetilde{F}$ is element-wise close to $F$, that is, each of their elements differ by at most a constant $\epsilon_z$ in absolute value. If $\widetilde{F}$ is passed as input to Jennrich's algorithm, it happens that $\widehat{V}$ is close enough to $V$ with high probability. To show this, denote $D_1=diag([V_2]_{1,:}D_w)$ and $D_2=diag([V_2]_{2,:}D_w)$ where $[V_2]_{i,:}$ is the vector formed by the $i$'th row of $V_2$. Let $F_1=F(I,I,e_1)$. By previous computations, we easily find out that 
+\begin{flalign*}
+    [F_1]_{n_1,n_2}=F(I,I,e_1)_{n_1,n_2}&=\sum_{j_1,j_2,j_3\in[m]}F_{j_1,j_2,j_3}[I]_{j_1,n_1}[I]_{j_2,i_2}[e_1]_{j_3}\\
+    &=\sum_{n\in[k]}[V]_{n_1,n}[V]_{n_2,n}[V_2D_w]_{1,n}\\
+    &=[VDiag([V_2]_{1,:}D_w)V^T]_{n_1,n_2},
+\end{flalign*} which implies that the above projection can be decomposed as $F_1=VD_1V^T$. Now consider its SVD $F_1=P\Lambda P^T$. Additionally, define the whitened\footnote{A whitening transformation has the objective of linearly transforming a vector of correlated random variables into a new vector, the elements of which are uncorrelated. Hence, the random elements that form the new tensor $E$ will have zero correlation.} rank-$k$ tensor $E=F(P,P,I)$. Observe that again, by previous computations, we can write $E$ as 
+\begin{flalign*}
+    E_{n_1,n_2,n_3}=F(P,P,I)_{n_1,n_2,n_3}&=\sum_{j_1,j_2\in[m']}\sum_{j_3\in[3]}F_{j_1,j_2,j_3}[P]_{j_1,n_1}[P]_{j_2,n_2}[I]_{j_3,n_3}\\
+    &=\sum_{j_1,j_2\in[m']}\sum_{n\in[k]}[P^T]_{n_1,j_1}V_{j_1,n}[P^T]_{n_2,j_2}V_{j_2,n}[V_2D_w]_{n_3,n}\\
+    &=\sum_{n\in[k]}[P^TV]_{n_1,n}[P^TV]_{n_2,n}[V_2D_w]_{n_3,n},
+\end{flalign*} so that $E=(P^TV)\otimes(P^TV)\otimes(V_2D_w)=U\otimes U\otimes(V_2D_w)$ when writing $U:=P^TV\in\mathbb{C}^{k\times k}$.\par
+Now slice the tensor $E$ in two such that we get its projections on the first two basis vectors of the plane. Formally, we have $E_1=E(I,I,e_1)$ and $E_2=E(I,I,e_2)$. $E_1=UD_1U^T$ and $E_2=UD_2U^T$. The proof for this is the same as that of $F_1$ and comes from the definition of linear mappings. Finally, computing $E_1E_2^{-1}$ yields the following eigendecomposition:
 \begin{flalign*}
     E_1E_2^{-1}&=UD_1U^T(U^TD_2U)^{-1}=UD_1U^T(U^T)^{-1}D_2^{-1}U^{-1}\\
-    &=UD_1D_2^{-1}U^{-1}=UDU^{-1}=M,
-\end{flalign*} when letting $D=D_1D_2^{-1}$.
-\begin{fact}
-    In the exact case, $$D=diag(e^{i\pi\langle\mu^{(j)},v^{(1)}-v^{(2)}\rangle}:j\in[k])$$
-\end{fact}
-\begin{proof}
-    To show this, we first have to note that taking the inverse of a diagonal matrix only requires us to take the reciprocal of the diagonal elements and store them in a resulting matrix which is itself diagonal. Now recall that $[V_2D_w]_{r,c}=w_ce^{i\pi\langle\mu^{(c)},v^{(r)}\rangle}$. We can express $D_1$ and $D_2$ a little differently. Namely, write $[D_1]_{j,j}=w_je^{i\pi\langle\mu^{(j)},v^{(1)}\rangle}$ and $[D_2]_{j,j}=w_je^{i\pi\langle\mu^{(j)},v^{(2)}\rangle}$. Using the above fact allows us to express the inverse of $D_2$ using compact form as $[D_2^{-1}]_{j,j}=\frac{1}{w_j}e^{-i\pi\langle\mu^{(j)},v^{(2)}\rangle}$. Hence, $$[D]_{j,j}=[D_1D_2^{-1}]_{j,j}=e^{i\pi\langle\mu^{(j)},v^{(1)}-v^{(2)}\rangle},$$ as required.
-\end{proof}\par 
-The above recap shows us why this dimensionality reduction is essential for our procedure. Indeed, tensor decomposition is in general a heavy operation, and it does not shy getting heavier as the tensor's dimensions grow. Here however, the decomposition is done on the smaller tensor $E$ that, thanks to the truncated SVD, keeps most of the important information that $F$ carries.
+    &=UD_1D_2^{-1}U^{-1}=UDU^{-1},
+\end{flalign*} by setting $D=D_1D_2^{-1}$. Observe that in the exact case, $$D=diag(e^{i\pi\langle\mu^{(j)},v^{(1)}-v^{(2)}\rangle}:j\in[k]).$$
+To show this, we first have to note that taking the inverse of a diagonal matrix only requires us to take the reciprocal of the diagonal elements and store them in a resulting matrix which is itself diagonal. Now recall that $[V_2D_w]_{r,c}=w_ce^{i\pi\langle\mu^{(c)},v^{(r)}\rangle}$. We can express $D_1$ and $D_2$ a little differently. Namely, write $[D_1]_{j,j}=w_je^{i\pi\langle\mu^{(j)},v^{(1)}\rangle}$ and $[D_2]_{j,j}=w_je^{i\pi\langle\mu^{(j)},v^{(2)}\rangle}$. Using the above fact allows us to express the inverse of $D_2$ using compact form as $[D_2^{-1}]_{j,j}=\frac{1}{w_j}e^{-i\pi\langle\mu^{(j)},v^{(2)}\rangle}$. Hence, $$[D]_{j,j}=[D_1D_2^{-1}]_{j,j}=e^{i\pi\langle\mu^{(j)},v^{(1)}-v^{(2)}\rangle},$$ as required.\par
+Finally write $M:=E_1E_2^{-1}$. Note that since the columns of $U$ are set to be the eigenvectors of $M$, by definition it suffices to compute the product $PU$ to return our estimates since $PU=PP^TV=V.$ Hence, the decomposition works as expected.\par 
+The above shows us why the dimensionality reduction is essential for our procedure. Indeed, tensor decomposition is in general a heavy operation, and it does not shy getting heavier as the tensor's dimensions grow. Here however, the decomposition is done on the smaller tensor $E$ that, thanks to the truncated SVD, keeps most of the important information that $F$ carries.
 \paragraph{Proof sketch of stability} We can now start giving the general ideas of the proof that the above tensor decomposition procedure is stable.
 \begin{enumerate}
     \item {\bf Noise affects the estimates mildly}: Jennrich's algorithm takes a large tensor as input and computes its decomposition. However, a key step in this decomposition is the creation of a lower dimension tensor that allows us to do the computations faster whilst keeping the stability guarantees. Here, matrix perturbation bounds show that the noise in the input tensor $\widetilde{F}$ propagates the estimates $\widehat{P}$ and $\widehat{E}$ in a mild way, as long as there is a tight enough upper bound on the condition number of $V$.
