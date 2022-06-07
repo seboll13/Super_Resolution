@@ -95,11 +95,11 @@ In a more general case, we can consider the projection of the tensor $V$ on thre
 \end{flalign*}
 Hence, we conclude that $V(X,Y,Z)$ admits the decomposition $(X^TA)\otimes(Y^TB)\otimes(Z^TC)$ for any arbitrary matrices $X$, $Y$ and $Z$.
 \subsection{Tensor Frobenius norm}
-We can also extend the matrix norm definition to that of a tensor. However in our work, we only will need the equivalent Frobenius norm which will be useful in the main algorithm. For the purpose, let $V$ be a rank $k$ 3-tensor of dimensions $m\times n\times 3$. Then, the Frobenius norm of $V$ is simply defined as 
+We can also extend the matrix norm definition to that of a tensor. However in our work, we will only need the equivalent Frobenius norm which will be useful in the main algorithm. For the purpose, let $V$ be a rank $k$ $p$-tensor of dimensions $m\times n\times p$. Then, the Frobenius norm of $V$ is simply the root of the sum of all squares, i.e.
 \begin{equation}
-    ||V||_F=\sqrt{\sum_{i\in[m]}\sum_{j\in[n]}\sum_{l\in[3]}[V]_{i,j,l}^2}.
+    ||V||_F=\sqrt{\sum_{i\in[m]}\sum_{j\in[n]}\sum_{l\in[p]}[V]_{i,j,l}^2}.
 \end{equation}
-\subsection{Jennrich's algorithm}
+\subsection{Jennrich's algorithm for tensor decomposition}
 As previously stated, the goal of tensor decomposition is to, given a tensor $T$ of rank $k$, decompose it as a sum of rank 1 tensors of appropriate dimensions. Jennrich's algorithm is commonly used for tensor decomposition. We denote the following theorem:
 \begin{theorem}
     Let $T=\sum_{j=1}^k u_i\otimes v_i\otimes w_i$ be a tensor in which each set of vectors $\{u_i\}_i$ and $\{v_i\}_i$ are linearly independent. Moreover, each pair of vectors in $\{w_i\}_i$ are also linearly independent. Then, the above decomposition is unique up to rescaling, and there is an efficient algorithm to find it.
