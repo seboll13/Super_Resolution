@@ -4,7 +4,7 @@
 \paragraph{Measurement function} There are two main factors that represent our signal: the weights $w_j$ and the complex low pass point spread functions $e^{i\pi\langle s,t\rangle}$ for some measurement $s$. The former is simply a weighting factor that is not too relevant to us here. The latter however represents the response of an imaging system to a point source. That is, it determines the overall performance level of our system and will be of crucial interest to our study.\par 
 We define the measurement function $f(s):\mathbb{R}^d\to\mathbb{C}$ as being the convolution of the point source $x(t)$ with the point spread function $e^{i\pi\langle s,t\rangle}$. Formally, $$f(s)=\sum_{j\in[k]}w_je^{i\pi\langle\mu^{(j)},s\rangle}.$$ The function $f$ is in essence a sum of weighted Fourier coefficients. Note that the measurements $s$ in the noisy setting are corrupted with a uniformly bounded perturbation $z$ so that the noisy recovery problem becomes $$\widetilde{f}(s)=f(s)+z(s),$$ in which $|z(s)|\leq\epsilon_z$ for every $s$ and a constant $\epsilon_z\in(0,1/2)$. The idea is that given access to the signal $x(t)$, we wish to generate a set of random bandlimited Fourier measurements and evaluate the noisy function $\widetilde{f}$ on every measurement $s$ in order to recover the parameters $\{w_j,\mu^{(j)}:j\in[k]\}$ of the point source signal as best as we can. The problem statement will be described in more detail in Chapter 4.
 
-\section{Main tools}
+\section{Preliminaries}
 The main mathematical tools that are needed to understand the paper essentially lie around the subject of linear algebra. They include notions related to vectors, matrices and tensors. We also require some probabilistic analysis tools since the algorithm is partly random. In this chapter, we introduce those tools, prove the more important results and closely relate them to the paper.
 \subsection{Generalised eigenvalue problem}
 Before introducing the generalised eigenvalue problem, it is important to recall what a condition number is for a particular matrix. Suppose for instance we have a matrix $X\in\mathbb{R}^{m\times n}$. We let $\lambda_1,\ldots,\lambda_n$ be the eigenvalues of $X^TX$ (with repetitions) and arrange them so that $\lambda_1\geq\ldots\geq\lambda_n\geq 0$. Then, the $\sigma_1\geq\ldots\geq\sigma_n\geq 0$ such that $\sigma_i=\sqrt{\lambda_i}$ are called the \textit{singular values} of $X$. Define $\sigma_{max}(X)=\sigma_1$ and $\sigma_{min}(X)=\sigma_n$. We then define the condition number of a matrix to be the ratio between the largest and the smallest singular value of $X$. That is 
@@ -85,15 +85,22 @@ We can verify that for a particular vector $a\in\mathbb{C}^m$, the projection $V
     &=\underbrace{\sum_{n\in[k]}A_{i_1,n}B_{i_2,n}}_{=AB}\underbrace{\sum_{j_3\in[m]}C_{j_3,n}[a]_{j_3}}_{=Diag(C^T a)}\\
     &=\left[ADiag(C^T a)B^T\right]_{i_1,i_2}.
 \end{flalign*} Since the above is true for every $i_1,i_2$, and we do not consider the $i_3$ coordinate since $a$ is a vector, we get the desired equality.\par 
-In a more general case, we can consider the projection of the tensor $V$ on three $m$ column matrices $X$, $Y$ and $Z$. Again we suppose that $V$ admits the decomposition $A\otimes B\otimes C$. In that case, it is true that 
-\begin{flalign*}
-    [V(X,Y,Z)]_{i_1,i_2,i_3}&=\sum_{j_1,j_2,j_3\in[m]}V_{j_1,j_2,j_3}[X]_{j_1,i_1}[Y]_{j_2,i_2}[Z]_{j_3,i_3}\\
-    &=\sum_{j_1,j_2,j_3\in[m]}\sum_{n\in[k]}A_{j_1,n}B_{j_2,n}C_{j_3,n}[X]_{j_1,i_1}[Y]_{j_2,i_2}[Z]_{j_3,i_3}\\
-    &=\sum_{j_1,j_2,j_3\in[m]}\sum_{n\in[k]}[X^T]_{i_1,j_1}A_{j_1,n}[Y^T]_{i_2,j_2}B_{j_2,n}[Z^T]_{i_3,j_3}C_{j_3,n}\\
-    &=\sum_{n\in[k]}[X^TA]_{i_1,n}[Y^TB]_{i_2,n}[Z^TC]_{i_3,n}\\
-    &=[(X^TA)\otimes(Y^TB)\otimes(Z^TC)]_{i_1,i_2,i_3}.
-\end{flalign*}
-Hence, we conclude that $V(X,Y,Z)$ admits the decomposition $(X^TA)\otimes(Y^TB)\otimes(Z^TC)$ for any arbitrary matrices $X$, $Y$ and $Z$.
+In a more general case, we can consider the projection of the tensor $V$ on three arbitrary matrices $X$, $Y$ and $Z$. We denote the following claim:
+\begin{claim}
+    \label{thm:decomp}
+    Suppose that $V$ admits the decomposition $A\otimes B\otimes C$. Then for any $m$-column matrices $X$, $Y$ and $Z$, the linear mapping $V(X,Y,Z)$ can be decomposed as $$V(X,Y,Z)=(X^TA)\otimes(Y^TB)\otimes(Z^TC).$$
+\end{claim}
+\begin{proof}
+    Element-wise, we have:
+    \begin{flalign*}
+        [V(X,Y,Z)]_{i_1,i_2,i_3}&=\sum_{j_1,j_2,j_3\in[m]}V_{j_1,j_2,j_3}[X]_{j_1,i_1}[Y]_{j_2,i_2}[Z]_{j_3,i_3}\\
+        &=\sum_{j_1,j_2,j_3\in[m]}\sum_{n\in[k]}A_{j_1,n}B_{j_2,n}C_{j_3,n}[X]_{j_1,i_1}[Y]_{j_2,i_2}[Z]_{j_3,i_3}\\
+        &=\sum_{j_1,j_2,j_3\in[m]}\sum_{n\in[k]}[X^T]_{i_1,j_1}A_{j_1,n}[Y^T]_{i_2,j_2}B_{j_2,n}[Z^T]_{i_3,j_3}C_{j_3,n}\\
+        &=\sum_{n\in[k]}[X^TA]_{i_1,n}[Y^TB]_{i_2,n}[Z^TC]_{i_3,n}\\
+        &=[(X^TA)\otimes(Y^TB)\otimes(Z^TC)]_{i_1,i_2,i_3}.
+    \end{flalign*}
+    Since this is true for every $i_1,i_2,i_3\in[m]$, the proof is thus complete.
+\end{proof}
 \subsection{Tensor Frobenius norm}
 We can also extend the matrix norm definition to that of a tensor. However in our work, we will only need the equivalent Frobenius norm which will be useful in the main algorithm. For the purpose, let $V$ be a rank $k$ $p$-tensor of dimensions $m\times n\times p$. Then, the Frobenius norm of $V$ is simply the root of the sum of all squares, i.e.
 \begin{equation}
